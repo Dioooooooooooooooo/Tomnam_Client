@@ -46,7 +46,7 @@ class ApiService {
         body: json.encode(data),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
         throw Exception('Failed to post data: ${response.statusCode}');
@@ -316,10 +316,31 @@ class HomePage extends StatelessWidget {
         backgroundColor: const Color(0xFF006A60),
         foregroundColor: Colors.white,
       ),
-      body: const Center(
-        child: Text(
-          'Welcome UBALDO!',
-          style: TextStyle(fontSize: 24),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/images/background.jpg'), // Make sure to add your image path
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            'Welcome UBALDO!',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white, // Consider text color for visibility
+              fontWeight: FontWeight.bold,
+              // Add text shadow for better readability on image
+              shadows: [
+                Shadow(
+                  offset: const Offset(1, 1),
+                  blurRadius: 3,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

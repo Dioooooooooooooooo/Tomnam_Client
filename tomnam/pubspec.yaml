@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.2.2
   shared_preferences: ^2.0.15
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +62,8 @@ flutter:
 
   assets:
     - assets/background for tomnam.jpg
+    - assets/sir asset.jpg
+    - assets/sir aliac.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
