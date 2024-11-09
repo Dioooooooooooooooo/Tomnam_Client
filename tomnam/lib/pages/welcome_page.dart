@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'customer_registration_page.dart';
+import 'owner_registration_page.dart';
+import 'login_page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -76,9 +78,12 @@ class WelcomePage extends StatelessWidget {
                           child: _buildButton(
                             context,
                             'OWNER',
-                            () {
-                              // Navigate to owner registration
-                            },
+                            () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const OwnerRegistrationPage(),
+                                )),
                           ),
                         ),
                       ],
@@ -93,7 +98,11 @@ class WelcomePage extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Navigate to login page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) => const LoginPage(),
+                                ));
                           },
                           child: const Text(
                             'Log In',
