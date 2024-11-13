@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.10/api/auth/login';
+  static const String baseUrl = 'http://192.168.1.10:5144/api/auth/login';
 
   // GET request example with token
   static Future<Map<String, dynamic>> getData() async {
@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      hintText: 'Your email or phone',
+                      hintText: 'Your email',
                       prefixIcon:
                           const Icon(Icons.email_outlined, color: Colors.grey),
                       filled: true,
@@ -319,8 +319,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-                'assets/images/background.jpg'), // Make sure to add your image path
+            image: AssetImage('assets/sir asset.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -329,9 +328,8 @@ class HomePage extends StatelessWidget {
             'Welcome UBALDO!',
             style: TextStyle(
               fontSize: 24,
-              color: Colors.white, // Consider text color for visibility
+              color: Colors.white,
               fontWeight: FontWeight.bold,
-              // Add text shadow for better readability on image
               shadows: [
                 Shadow(
                   offset: const Offset(1, 1),
