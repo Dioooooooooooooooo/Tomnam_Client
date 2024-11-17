@@ -1,61 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class ApiService {
-  static const String baseUrl = 'http://192.168.1.10:5144/api/auth/login';
-
-  // GET request example with token
-  static Future<Map<String, dynamic>> getData() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken'); // Retrieve token
-
-      final response = await http.get(
-        Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
-
-  // POST request example with token
-  static Future<Map<String, dynamic>> postData(
-      Map<String, dynamic> data) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken'); // Retrieve token
-
-      final response = await http.post(
-        Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(data),
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to post data: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
-}
+import 'package:tomnam/features/authentication/controllers/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -67,12 +11,19 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _loginController = LoginController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleLogin() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    _loginController.handleLogin(context, email, password);
   }
 
   @override
@@ -104,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'TOMNAM',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                       ),
@@ -113,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'WELCOME BACK!',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
@@ -127,7 +76,6 @@ class _LoginPageState extends State<LoginPage> {
           // Bottom section with white background
           Expanded(
             child: Container(
-              color: Colors.white,
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
                   const Text(
                     'E-mail',
                     style: TextStyle(
-                      color: Colors.black87,
                       fontSize: 16,
                     ),
                   ),
@@ -166,7 +113,6 @@ class _LoginPageState extends State<LoginPage> {
                   const Text(
                     'Password',
                     style: TextStyle(
-                      color: Colors.black87,
                       fontSize: 16,
                     ),
                   ),
@@ -255,91 +201,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _handleLogin() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-
-    if (email.isNotEmpty && password.isNotEmpty) {
-      try {
-        final loginData = {'email': email, 'password': password};
-        final response = await ApiService.postData(loginData);
-
-        // Check if the widget is still mounted before navigating
-        if (!mounted) return;
-
-        // If login is successful
-        if (response['accessToken'] != null) {
-          String token = response['accessToken'];
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('accessToken', token); // Store token
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
-          );
-        } else {
-          // Handle login failure (e.g., show an error message)
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(response['message'] ?? 'Login failed')),
-          );
-        }
-      } catch (e) {
-        if (!mounted) return;
-
-        // Handle errors from the API request
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter email and password')),
-      );
-    }
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TOMNAM'),
-        backgroundColor: const Color(0xFF006A60),
-        foregroundColor: Colors.white,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/sir asset.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            'Welcome UBALDO!',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  offset: const Offset(1, 1),
-                  blurRadius: 3,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

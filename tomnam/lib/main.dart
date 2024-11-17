@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/welcome_page.dart';
 
 void main() {
@@ -11,14 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.system,
+      theme: TApptheme.lightTheme,
+      darkTheme: TApptheme.darkTheme,
       title: 'Tomnam',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF006A60),
-        ),
-        useMaterial3: true,
-      ),
       home: const WelcomePage(),
     );
   }

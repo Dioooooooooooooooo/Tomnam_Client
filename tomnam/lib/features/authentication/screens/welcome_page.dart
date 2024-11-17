@@ -96,14 +96,20 @@ class WelcomePage extends StatelessWidget {
                           'Already have an account? ',
                           style: TextStyle(color: Colors.white),
                         ),
-                        GestureDetector(
+                        InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => const LoginPage(),
-                                ));
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) => const LoginPage(),
+                              ),
+                            );
                           },
+                          splashColor:
+                              Colors.blueAccent, // Customize ripple color
+                          highlightColor: Colors.blue
+                              .withOpacity(0.2), // Highlight color when pressed
+                          borderRadius: BorderRadius.circular(8),
                           child: const Text(
                             'Log In',
                             style: TextStyle(
@@ -126,21 +132,33 @@ class WelcomePage extends StatelessWidget {
 
   Widget _buildButton(
       BuildContext context, String text, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+    return Material(
+      color:
+          Colors.transparent, // Ensure that the Material widget is transparent
+      child: InkWell(
+        onTap: onPressed,
+        splashColor: Colors.blueAccent, // Customize the ripple color
+        highlightColor:
+            Colors.blue.withOpacity(0.2), // Highlight color when pressed
+        borderRadius:
+            BorderRadius.circular(16), // Match the button's border radius
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       ),
     );
