@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CustomerRegistrationPage extends StatefulWidget {
-  const CustomerRegistrationPage({super.key});
+class OwnerRegistrationView extends StatefulWidget {
+  const OwnerRegistrationView({super.key});
 
   @override
-  State<CustomerRegistrationPage> createState() =>
-      _CustomerRegistrationPageState();
+  State<OwnerRegistrationView> createState() => _OwnerRegistrationViewState();
 }
 
-class _CustomerRegistrationPageState extends State<CustomerRegistrationPage> {
+class _OwnerRegistrationViewState extends State<OwnerRegistrationView> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -38,7 +37,7 @@ class _CustomerRegistrationPageState extends State<CustomerRegistrationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Customer',
+                  'Owner',
                   style: TextStyle(
                     color: Color(0xFF006A60),
                     fontSize: 18,

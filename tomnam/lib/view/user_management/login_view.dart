@@ -1,70 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tomnam/services/api/api_service.dart';
+import '../../constants/routes.dart';
 
-class ApiService {
-  static const String baseUrl = 'http://192.168.1.10/api/auth/login';
-
-  // GET request example with token
-  static Future<Map<String, dynamic>> getData() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken'); // Retrieve token
-
-      final response = await http.get(
-        Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
-
-  // POST request example with token
-  static Future<Map<String, dynamic>> postData(
-      Map<String, dynamic> data) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken'); // Retrieve token
-
-      final response = await http.post(
-        Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(data),
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to post data: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
-}
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginViewState extends State<LoginView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -277,11 +223,10 @@ class _LoginPageState extends State<LoginPage> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', token); // Store token
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
+          if (!mounted) return;
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            homeRoute,
+            (route) => false,
           );
         } else {
           // Handle login failure (e.g., show an error message)
@@ -302,47 +247,5 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('Please enter email and password')),
       );
     }
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TOMNAM'),
-        backgroundColor: const Color(0xFF006A60),
-        foregroundColor: Colors.white,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-                'assets/images/background.jpg'), // Make sure to add your image path
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            'Welcome UBALDO!',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white, // Consider text color for visibility
-              fontWeight: FontWeight.bold,
-              // Add text shadow for better readability on image
-              shadows: [
-                Shadow(
-                  offset: const Offset(1, 1),
-                  blurRadius: 3,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'customer_registration_page.dart';
-import 'owner_registration_page.dart';
-import 'login_page.dart';
+import '../../constants/routes.dart';
 
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+class WelcomeView extends StatelessWidget {
+  const WelcomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +62,9 @@ class WelcomePage extends StatelessWidget {
                           child: _buildButton(
                             context,
                             'CUSTOMER',
-                            () => Navigator.push(
+                            () => Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CustomerRegistrationPage(),
-                              ),
+                              customerRegisterRoute,
                             ),
                           ),
                         ),
@@ -78,12 +73,10 @@ class WelcomePage extends StatelessWidget {
                           child: _buildButton(
                             context,
                             'OWNER',
-                            () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const OwnerRegistrationPage(),
-                                )),
+                            () => Navigator.pushNamed(
+                              context,
+                              ownerRegisterRoute,
+                            ),
                           ),
                         ),
                       ],
@@ -98,11 +91,7 @@ class WelcomePage extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => const LoginPage(),
-                                ));
+                            Navigator.pushNamed(context, loginRoute);
                           },
                           child: const Text(
                             'Log In',
