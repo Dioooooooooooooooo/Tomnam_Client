@@ -41,10 +41,10 @@ class WelcomePage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                      'SIGN UP AS',
-                    ),
-                    const SizedBox(height: 16),
+                    const CustomTitleLarge(
+                        text: 'SIGN UP AS', textAlign: TextAlign.left),
+                    const SizedBox(
+                        height: 16), // for space between 2 buttons below
                     Row(
                       children: [
                         Expanded(
@@ -74,6 +74,7 @@ class WelcomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // use bodyLarge maybe
                         const Text(
                           'Already have an account? ',
                           style: TextStyle(color: Colors.white),

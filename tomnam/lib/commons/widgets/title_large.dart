@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomTitleLarge extends StatelessWidget {
   final String text;
   final bool isDisabled;
+  final TextAlign textAlign;
 
   const CustomTitleLarge({
     super.key,
     required this.text,
     this.isDisabled = false,
+    this.textAlign = TextAlign.center,
   });
 
   @override
@@ -15,7 +17,7 @@ class CustomTitleLarge extends StatelessWidget {
     return Text(
       text,
       style: Theme.of(context).textTheme.titleLarge,
-      textAlign: TextAlign.center,
+      textAlign: textAlign,
     );
   }
 }
