@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tomnam/commons/widgets/custom_elevated_button.dart';
-import 'package:tomnam/commons/widgets/headline_large.dart';
-import 'package:tomnam/commons/widgets/headline_medium.dart';
-import 'package:tomnam/commons/widgets/headline_small.dart';
-import 'package:tomnam/commons/widgets/title_large.dart';
+import 'package:tomnam/commons/widgets/headline_text.dart';
+import 'package:tomnam/commons/widgets/title_text.dart';
 import '../../../utils/constants/routes.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -31,18 +29,27 @@ class WelcomePage extends StatelessWidget {
               children: [
                 const Column(
                   children: [
-                    CustomHeadlineLarge(text: "Welcome to\nTOMNAM"),
+                    HeadlineText(
+                      text: "Welcome to\nTOMNAM",
+                      size: HeadlineSize.large,
+                    ),
                     SizedBox(
                       height: 8,
                     ),
-                    CustomHeadlineSmall(text: "Gutom naman!"),
+                    HeadlineText(
+                      text: "Gutom naman!",
+                      size: HeadlineSize.small,
+                    ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const CustomTitleLarge(
-                        text: 'SIGN UP AS', textAlign: TextAlign.left),
+                    const TitleText(
+                      text: 'SIGN UP AS',
+                      textAlign: TextAlign.left,
+                      size: TitleSize.large,
+                    ),
                     const SizedBox(
                         height: 16), // for space between 2 buttons below
                     Row(
