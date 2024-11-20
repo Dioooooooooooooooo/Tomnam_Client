@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../data/services/api_service.dart';
 import '../models/user.dart';
 import 'package:logger/logger.dart';
+import '../../../utils/constants/routes.dart';
+import 'dart:convert';
 
 class LoginController {
   static final Logger _logger = Logger(
@@ -13,13 +15,19 @@ class LoginController {
       final loginData = {'email': email, 'password': password};
       final response = await ApiService.postData(loginData);
 
+      _logger.d('API Response: $response');
+
+      // Check if response has required accessToken
       if (response['accessToken'] != null) {
-        return User.fromJson(response); // Convert response to User model
+        return User.fromJson(response);
+      } else {
+        _logger.w('Invalid response format: $response');
+        return null;
       }
     } catch (e, stackTrace) {
-      _logger.e("Login error for email: $email", e, stackTrace);
+      _logger.e('Login error for email: $email', e, stackTrace);
+      return null;
     }
-    return null;
   }
 
   Future<void> handleLogin(
@@ -33,18 +41,32 @@ class LoginController {
       return;
     }
 
-    final user = await login(email, password);
+    try {
+      final user = await login(email, password);
 
-    if (context.mounted) {
+      if (!context.mounted) return;
+
       if (user != null) {
+        // Login successful
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          homeRoute,
+          (route) => false,
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login successful!')),
         );
       } else {
+        // Login failed
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login failed!')),
+          const SnackBar(content: Text('Invalid email or password')),
         );
       }
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login error: ${e.toString()}')),
+      );
     }
   }
 }

@@ -13,7 +13,7 @@ class TApptheme {
 
   static ThemeData lightTheme = ThemeData(
       useMaterial3: true,
-      fontFamily: 'Manrope',
+      fontFamily: 'Poppins',
       brightness: Brightness.light,
       primaryColor: Colors.teal.shade900, // put colors on constants
       scaffoldBackgroundColor: Colors.white, //scaffold is different screes
@@ -29,7 +29,7 @@ class TApptheme {
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Manrope',
+    fontFamily: 'Poppins',
     brightness: Brightness.light,
     primaryColor: Colors.teal.shade900, // put colors on constants
     scaffoldBackgroundColor: Colors.black, //scaffold is different screes

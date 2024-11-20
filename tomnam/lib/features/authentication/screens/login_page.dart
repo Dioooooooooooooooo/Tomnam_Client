@@ -180,7 +180,6 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text(
                         "Don't have an account? ",
-                        style: TextStyle(color: Colors.black87),
                       ),
                       GestureDetector(
                         onTap: () {
