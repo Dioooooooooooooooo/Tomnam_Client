@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/commons/widgets/body_text.dart';
 import 'package:tomnam/commons/widgets/custom_elevated_button.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import 'package:tomnam/commons/widgets/title_text.dart';
@@ -48,7 +49,7 @@ class WelcomePage extends StatelessWidget {
                     const TitleText(
                       text: 'SIGN UP AS',
                       textAlign: TextAlign.left,
-                      size: TitleSize.large,
+                      size: TitleSize.medium,
                     ),
                     const SizedBox(
                         height: 16), // for space between 2 buttons below
@@ -82,20 +83,18 @@ class WelcomePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // use bodyLarge maybe
-                        const Text(
-                          'Already have an account? ',
-                          style: TextStyle(color: Colors.white),
+                        const BodyText(
+                          text: 'Already have an account?',
+                          size: BodyTextSize.medium,
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, loginRoute);
                           },
-                          child: const Text(
-                            'Log In',
-                            style: TextStyle(
-                              color: Colors.white,
-                              decoration: TextDecoration.underline,
-                            ),
+                          child: const BodyText(
+                            text: 'Log In?',
+                            size: BodyTextSize.medium,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ],

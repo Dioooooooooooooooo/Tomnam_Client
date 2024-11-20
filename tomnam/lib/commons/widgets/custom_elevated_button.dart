@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tomnam/commons/widgets/headline_text.dart';
+import 'package:tomnam/commons/widgets/title_text.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String text;
@@ -31,9 +31,9 @@ class CustomElevatedButton extends StatelessWidget {
                   strokeWidth: 2,
                 ),
               )
-            : HeadlineText(
+            : TitleText(
                 text: text,
-                size: HeadlineSize.large,
+                size: TitleSize.medium,
               ),
       ),
     );

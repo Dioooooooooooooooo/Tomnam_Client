@@ -5,6 +5,7 @@ class BodyText extends StatelessWidget {
   final bool isDisabled;
   final TextAlign textAlign;
   final BodyTextSize size;
+  final TextDecoration? decoration;
 
   const BodyText({
     super.key,
@@ -12,6 +13,7 @@ class BodyText extends StatelessWidget {
     this.isDisabled = false,
     this.textAlign = TextAlign.center,
     this.size = BodyTextSize.medium,
+    this.decoration,
   });
 
   @override
