@@ -49,7 +49,7 @@ class LoginController {
       if (user != null) {
         // Login successful
         Navigator.of(context).pushNamedAndRemoveUntil(
-          homeRoute,
+          mainPageRoute,
           (route) => false,
         );
         ScaffoldMessenger.of(context).showSnackBar(

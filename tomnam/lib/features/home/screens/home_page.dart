@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tomnam/commons/widgets/custom_navbar.dart';
 import 'package:tomnam/commons/widgets/custom_searchbar.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import '../../../commons/widgets/announcement_section.dart';
@@ -35,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     "Giniling Guisado",
     "Pancit",
   ];
+
   final List<String> prices = ["\$300", "\$650", "\$50", "\$100"];
   final List<String> reviews = ["54", "104", "120", "34"];
   final logger = Logger();
@@ -114,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                   prices: prices,
                   isVertical: true),
             ],
-            const CustomNavBar(),
           ],
         ),
       ),

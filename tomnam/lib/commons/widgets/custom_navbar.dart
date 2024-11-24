@@ -5,63 +5,45 @@ import 'package:tomnam/features/profile_management/screens/profile_page.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class CustomNavBar extends StatefulWidget {
-  const CustomNavBar({super.key});
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   CustomNavBarState createState() => CustomNavBarState();
 }
 
 class CustomNavBarState extends State<CustomNavBar> {
-  int _selectedIndex = 0;
-
-  static final List<Widget> _pages = [
-    const HomePage(),
-    const SearchPage(),
-    const ProfilePage(),
-  ];
-
-  void _onItemTapped(int index) {
-    if (_selectedIndex != index) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => _pages[index],
-        ),
-      );
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Custom Navbar Example")),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(
-              icon: Icons.home,
-              label: "Home",
-              index: 0,
-            ),
-            _buildNavItem(
-              icon: Icons.calendar_month_outlined,
-              label: "Calendar",
-              index: 1,
-            ),
-            _buildNavItem(
-              icon: Icons.person,
-              label: "Profile",
-              index: 2,
-            ),
-          ],
-        ),
+    return BottomAppBar(
+      color: Colors.white,
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 6.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+            icon: Icons.home,
+            label: "Home",
+            index: 0,
+          ),
+          _buildNavItem(
+            icon: Icons.calendar_month_outlined,
+            label: "Calendar",
+            index: 1,
+          ),
+          _buildNavItem(
+            icon: Icons.person,
+            label: "Profile",
+            index: 2,
+          ),
+        ],
       ),
     );
   }
@@ -71,10 +53,10 @@ class CustomNavBarState extends State<CustomNavBar> {
     required String label,
     required int index,
   }) {
-    final bool isSelected = _selectedIndex == index;
+    final bool isSelected = widget.currentIndex == index;
 
     return GestureDetector(
-      onTap: () => _onItemTapped(index),
+      onTap: () => widget.onTap(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

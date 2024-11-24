@@ -7,4 +7,5 @@ const storeRoute = '/store/';
 const foodOverviewRoute = '/food-overview/';
 const calendarRoute = '/calendar/';
 const profilePageRoute = '/profile_page/';
-const searchPage = 'search_page';
+const searchPageRoute = 'search_page';
+const mainPageRoute = '/main_page';
