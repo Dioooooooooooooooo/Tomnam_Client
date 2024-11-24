@@ -87,6 +87,7 @@ class WelcomePage extends StatelessWidget {
                           text: 'Already have an account?',
                           size: BodyTextSize.medium,
                         ),
+
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, loginRoute);

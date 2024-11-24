@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class OwnerRegistrationPage extends StatefulWidget {
   const OwnerRegistrationPage({super.key});
@@ -14,7 +15,7 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
+  final logger = Logger();
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -156,7 +157,7 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
   void _handleSignUp() {
     if (_formKey.currentState!.validate()) {
       // Implement sign up logic here
-      print('Sign up pressed');
+      logger.i('Sign up pressed');
     }
   }
 }

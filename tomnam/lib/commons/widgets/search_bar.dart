@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 
-class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
-
+class CustomSearchBar1 extends StatelessWidget {
+  const CustomSearchBar1({super.key});
+// FAKE NI
   @override
   Widget build(BuildContext context) {
     return Container(
