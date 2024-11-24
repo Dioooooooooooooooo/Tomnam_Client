@@ -3,16 +3,22 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.10:5144/api/auth/login';
+  static const String baseUrl = 'http://192.168.254.104:5144/api';
 
   // GET request example with token
-  static Future<Map<String, dynamic>> getData() async {
+  static Future<Map<String, dynamic>> getData(String? endpoint) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
 
+      String? url = baseUrl;
+
+      if(endpoint != null){
+        url = baseUrl + endpoint;
+      }
+
       final response = await http.get(
-        Uri.parse(baseUrl),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -31,13 +37,20 @@ class ApiService {
 
   // POST request example with token
   static Future<Map<String, dynamic>> postData(
+      String endpoint,
       Map<String, dynamic> data) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
 
+      String? url = baseUrl;
+
+      if(endpoint != null){
+        url = baseUrl + endpoint;
+      }
+
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
