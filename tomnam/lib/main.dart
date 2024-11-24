@@ -6,6 +6,8 @@ import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/home/screens/food_overview_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
+import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
+import 'package:tomnam/features/profile_management/screens/profile_page.dart';
 import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/welcome_page.dart';
 import '/utils/constants/routes.dart';
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
         storeRoute: (context) => const StorePage(),
         foodOverviewRoute: (context) => const FoodOverviewPage(),
         calendarRoute: (context) => const CalendarPage(),
+        profilePageRoute: (context) => const ProfilePage(),
+        searchPage: (context) => const SearchPage(),
       },
     );
   }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.10:5144/api/auth/login';
+  static const String baseUrl = 'http://192.168.1.12:5144/api/auth/login';
 
   // GET request example with token
   static Future<Map<String, dynamic>> getData() async {
