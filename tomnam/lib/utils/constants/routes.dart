@@ -4,5 +4,6 @@ const customerRegisterRoute = '/customer_register/';
 const ownerRegisterRoute = '/owner-register/';
 const homeRoute = '/home/';
 const storeRoute = '/store/';
-const foodOverviewRoute = '/food-overview/';
+const reserveFoodRoute = '/reserve-food/';
 const calendarRoute = '/calendar/';
+const addToCartRoute = '/add-to-cart/';

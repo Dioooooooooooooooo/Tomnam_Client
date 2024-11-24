@@ -3,7 +3,6 @@ import '../../../data/services/api_service.dart';
 import '../models/user.dart';
 import 'package:logger/logger.dart';
 import '../../../utils/constants/routes.dart';
-import 'dart:convert';
 
 class LoginController {
   static final Logger _logger = Logger(
