@@ -114,10 +114,10 @@ class _HomePageState extends State<HomePage> {
                   prices: prices,
                   isVertical: true),
             ],
-            const CustomNavBar(),
           ],
         ),
       ),
+      // bottomNavigationBar: const CustomNavBar(),
     );
   }
 }
