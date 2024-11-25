@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/services/api_service.dart';
 import '../models/user.dart';
 import 'package:logger/logger.dart';
@@ -12,13 +13,35 @@ class LoginController {
   Future<User?> login(String email, String password) async {
     try {
       final loginData = {'email': email, 'password': password};
-      final response = await ApiService.postData(loginData);
+      final response = await ApiService.postData("/auth/login", loginData);
 
       _logger.d('API Response: $response');
 
+      final data = response['data'];
+
       // Check if response has required accessToken
-      if (response['accessToken'] != null) {
-        return User.fromJson(response);
+      if (data['token'] != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('accessToken', data['token']);
+
+        final profileRequest = await ApiService.getData("/users/profile");
+        final profileData = profileRequest['data'];
+
+        _logger.d(profileData);
+        User profile = User(
+            Id: profileData['id'],
+            email: email,
+            role: profileData['role'],
+            firstName: profileData['firstName'],
+            lastName: profileData['lastName']);
+
+        _logger.d(profile);
+
+        if (profile.role == "Customer") {
+          profile.behaviorScore = profileData['behaviorScore'];
+        }
+
+        return profile;
       } else {
         _logger.w('Invalid response format: $response');
         return null;
@@ -48,7 +71,7 @@ class LoginController {
       if (user != null) {
         // Login successful
         Navigator.of(context).pushNamedAndRemoveUntil(
-          homeRoute,
+          mainPageRoute,
           (route) => false,
         );
         ScaffoldMessenger.of(context).showSnackBar(

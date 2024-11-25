@@ -7,3 +7,6 @@ const storeRoute = '/store/';
 const reserveFoodRoute = '/reserve-food/';
 const calendarRoute = '/calendar/';
 const addToCartRoute = '/add-to-cart/';
+const profilePageRoute = '/profile_page/';
+const searchPageRoute = 'search_page';
+const mainPageRoute = '/main_page';

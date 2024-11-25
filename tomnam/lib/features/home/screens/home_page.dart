@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import '../../../commons/widgets/announcement_section.dart';
-import '../../../commons/widgets/search_bar.dart';
 import '../../../commons/widgets/tab_bar.dart';
 import '../../../commons/widgets/store_list.dart';
 import '../../../commons/widgets/food_list.dart';
@@ -33,11 +33,12 @@ class _HomePageState extends State<HomePage> {
     "Giniling Guisado",
     "Pancit",
   ];
+
   final List<String> prices = ["\$300", "\$650", "\$50", "\$100"];
   final List<String> reviews = ["54", "104", "120", "34"];
+  final logger = Logger();
 
   int selectedTabIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +46,6 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           children: [
-            const CustomSearchBar(),
             const SizedBox(height: 20),
             const AnnouncementSection(),
             const SizedBox(height: 20),
@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
               StoreList(stores: stores, imageList: imageList, reviews: reviews),
               const SizedBox(height: 20),
+
               const Text(
                 "Featured Foods",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -102,6 +103,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      // bottomNavigationBar: const CustomNavBar(),
     );
   }
 }
