@@ -4,7 +4,6 @@ import '../../../data/services/api_service.dart';
 import '../models/user.dart';
 import 'package:logger/logger.dart';
 import '../../../utils/constants/routes.dart';
-import 'dart:convert';
 
 class LoginController {
   static final Logger _logger = Logger(
@@ -18,22 +17,27 @@ class LoginController {
 
       _logger.d('API Response: $response');
 
-      final data = response['data']; 
+      final data = response['data'];
 
       // Check if response has required accessToken
       if (data['token'] != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('accessToken', data['token']); 
+        prefs.setString('accessToken', data['token']);
 
         final profileRequest = await ApiService.getData("/users/profile");
         final profileData = profileRequest['data'];
-        
+
         _logger.d(profileData);
-        User profile = User(Id: profileData['id'], email: email, role: profileData['role'], firstName: profileData['firstName'], lastName: profileData['lastName']);
-        
+        User profile = User(
+            Id: profileData['id'],
+            email: email,
+            role: profileData['role'],
+            firstName: profileData['firstName'],
+            lastName: profileData['lastName']);
+
         _logger.d(profile);
 
-        if(profile.role == "Customer"){
+        if (profile.role == "Customer") {
           profile.behaviorScore = profileData['behaviorScore'];
         }
 

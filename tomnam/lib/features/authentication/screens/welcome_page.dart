@@ -14,7 +14,7 @@ class WelcomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background for tomnam.jpg'),
+            image: AssetImage('assets/images/background for tomnam.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Color(0xFF006A60),
