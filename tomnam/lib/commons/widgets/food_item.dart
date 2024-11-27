@@ -20,7 +20,7 @@ class FoodItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, foodOverviewRoute);
+        Navigator.pushNamed(context, reserveFoodRoute);
       },
       child: isVertical
           ? Container(

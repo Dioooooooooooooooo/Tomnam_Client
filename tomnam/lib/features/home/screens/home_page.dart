@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tomnam/commons/widgets/custom_searchbar.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import '../../../commons/widgets/announcement_section.dart';
 import '../../../commons/widgets/tab_bar.dart';
@@ -47,19 +46,6 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           children: [
-            CustomSearchBar(
-              hintText: "Search here...",
-              onChanged: (value) {
-                logger.i('Search text: $value');
-              },
-              onSearchPressed: () {
-                logger.i(
-                    'Search button pressed'); // to retrieve foods/stores that resembles the search
-              },
-              onClearPressed: () {
-                logger.i('Clear button pressed'); // to clear the search area
-              },
-            ),
             const SizedBox(height: 20),
             const AnnouncementSection(),
             const SizedBox(height: 20),

@@ -3,7 +3,7 @@ import 'package:tomnam/features/authentication/screens/customer_registration_pag
 import 'package:tomnam/features/authentication/screens/login_page.dart';
 import 'package:tomnam/features/authentication/screens/owner_registration_page.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
-import 'package:tomnam/features/home/screens/food_overview_page.dart';
+import 'package:tomnam/features/reserve/reserve_food_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ownerRegisterRoute: (context) => const OwnerRegistrationPage(),
         homeRoute: (context) => const HomePage(),
         storeRoute: (context) => const StorePage(),
-        foodOverviewRoute: (context) => const FoodOverviewPage(),
+        reserveFoodRoute: (context) => const ReserveFoodPage(),
         calendarRoute: (context) => const CalendarPage(),
         profilePageRoute: (context) => const ProfilePage(),
         searchPageRoute: (context) => const SearchPage(),

@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             width: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/background for tomnam.jpg'),
+                image: AssetImage('assets/images/background for tomnam.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                   Color(0xFF006A60),
