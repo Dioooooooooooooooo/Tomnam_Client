@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../commons/widgets/behavior_score.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,8 +15,16 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: const Center(
-        child: Text('Detailghjhghjs about the profile.'),
+      body: Center(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // Align to the left
+          children: const [
+            Text('Details about the profile.'),
+            SizedBox(height: 20), // Add spacing between widgets
+            BehaviorScore(),
+          ],
+        ),
       ),
     );
   }
