@@ -72,68 +72,17 @@ class _HomePageState extends State<HomePage> {
                     reviews: reviews,
                   ),
                   const SizedBox(height: 20),
-                  CustomTabBar(
-                    tabs: tabs,
-                    selectedTabIndex: selectedTabIndex,
-                    onTabTapped: (index) {
-                      setState(() {
-                        selectedTabIndex = index;
-                      });
-                    },
+                  const HeadlineText(
+                    text: "Reserve Now",
+                    size: HeadlineSize.small,
+                    textAlign: TextAlign.left,
                   ),
-                  const SizedBox(height: 20),
-
-                  // Conditional rendering based on selected tab
-                  if (selectedTabIndex == 0) ...[
-                    const HeadlineText(
-                      text: "Reserve Now",
-                      size: HeadlineSize.small,
-                      textAlign: TextAlign.left,
-                    ),
-                    const SizedBox(height: 10),
-                    StoreListVertical(
-                      stores: stores,
-                      imageList: storeImageList,
-                      reviews: reviews,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Featured Foods",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    FoodList(
-                      productTitles: productTitles,
-                      imageList: foodImageList,
-                      prices: prices,
-                    ),
-                  ] else if (selectedTabIndex == 1) ...[
-                    const Text(
-                      "Nearby Stores",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    StoreListVertical(
-                      stores: stores,
-                      imageList: storeImageList,
-                      reviews: reviews,
-                    ),
-                  ] else if (selectedTabIndex == 2) ...[
-                    const Text(
-                      "Featured Foods",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    FoodList(
-                      productTitles: productTitles,
-                      imageList: foodImageList,
-                      prices: prices,
-                      isVertical: true,
-                    ),
-                  ],
+                  const SizedBox(height: 10),
+                  StoreListVertical(
+                    stores: stores,
+                    imageList: storeImageList,
+                    reviews: reviews,
+                  ),
                 ],
               ),
             ),
