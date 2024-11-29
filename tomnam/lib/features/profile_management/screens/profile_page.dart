@@ -15,11 +15,11 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start, // Align to the left
-          children: const [
+          children: [
             Text('Details about the profile.'),
             SizedBox(height: 20), // Add spacing between widgets
             BehaviorScore(),

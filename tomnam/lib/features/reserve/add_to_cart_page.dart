@@ -15,47 +15,6 @@ class AddToCartPage extends StatelessWidget {
             decoration: const BoxDecoration(color: Colors.white),
             child: Stack(
               children: [
-                // Header Bar
-                Positioned(
-                  left: 0,
-                  top: 0,
-                  child: Container(
-                    width: 360,
-                    height: 55,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF008C70),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 9),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Placeholder for icon/buttons, add relevant widgets here
-                          SizedBox(
-                            width: 35,
-                            height: 35,
-                            child: Icon(Icons.menu, color: Colors.white),
-                          ),
-                          const Text(
-                            'Add to Cart',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 35,
-                            height: 35,
-                            child:
-                                Icon(Icons.shopping_cart, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
                 // Divider Line
                 Positioned(
                   left: -18,

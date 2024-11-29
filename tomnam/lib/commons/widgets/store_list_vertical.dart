@@ -3,12 +3,12 @@ import 'store_item.dart';
 
 // list of store items
 
-class StoreList extends StatelessWidget {
+class StoreListVertical extends StatelessWidget {
   final List<String> stores;
   final List<String> imageList;
   final List<String> reviews;
 
-  const StoreList({
+  const StoreListVertical({
     super.key,
     required this.stores,
     required this.imageList,

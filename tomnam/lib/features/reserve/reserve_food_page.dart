@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/commons/widgets/upper_navbar.dart';
 
 class ReserveFoodPage extends StatefulWidget {
   const ReserveFoodPage({super.key});
@@ -56,7 +57,7 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Food Overview'),
+        flexibleSpace: const UpperNavBar(),
       ),
       body: SingleChildScrollView(
         child: Center(

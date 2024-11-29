@@ -25,13 +25,10 @@ class UpperNavBar extends StatelessWidget {
               children: [
                 Icon(
                   Icons.search,
-                  color: Colors.white, // White icon color
+                  color: Colors.white,
+                  // White icon color
                 ),
                 SizedBox(width: 8),
-                Text(
-                  'Search',
-                  style: TextStyle(color: Colors.white), // White text
-                ),
               ],
             ),
           ),

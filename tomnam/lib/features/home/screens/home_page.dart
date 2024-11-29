@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
+import 'package:tomnam/commons/widgets/store_list_vertical.dart';
 import '../../../commons/widgets/announcement_section.dart';
 import '../../../commons/widgets/tab_bar.dart';
-import '../../../commons/widgets/store_list.dart';
+import '../../../commons/widgets/store_list_horizontal.dart';
 import '../../../commons/widgets/food_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,11 +16,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> tabs = ["All", "Nearby Store", "Top Food"];
-  final List<String> imageList = [
+  final List<String> foodImageList = [
     "assets/images/adobo.jpg",
     "assets/images/bbq-pork.jpg",
     "assets/images/giniling-guisado.jpg",
     "assets/images/pancit.jpg",
+  ];
+  final List<String> storeImageList = [
+    "assets/images/karenderya_3.jpg",
+    "assets/images/karenderya_4.jpg",
+    "assets/images/karenderya_1.jpg",
+    "assets/images/karenderya_2.jpg",
   ];
   final List<String> stores = [
     "Danny's Karenderya",
@@ -47,12 +54,24 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: [
             const AnnouncementSection(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const HeadlineText(
+                    text: "Latest Reservations",
+                    size: HeadlineSize.small,
+                    textAlign: TextAlign.left,
+                  ),
+                  const SizedBox(height: 10),
+                  StoreListHorizontal(
+                    stores: stores,
+                    imageList: storeImageList,
+                    reviews: reviews,
+                  ),
+                  const SizedBox(height: 20),
                   CustomTabBar(
                     tabs: tabs,
                     selectedTabIndex: selectedTabIndex,
@@ -67,14 +86,14 @@ class _HomePageState extends State<HomePage> {
                   // Conditional rendering based on selected tab
                   if (selectedTabIndex == 0) ...[
                     const HeadlineText(
-                      text: "All stores",
+                      text: "Reserve Now",
                       size: HeadlineSize.small,
                       textAlign: TextAlign.left,
                     ),
                     const SizedBox(height: 10),
-                    StoreList(
+                    StoreListVertical(
                       stores: stores,
-                      imageList: imageList,
+                      imageList: storeImageList,
                       reviews: reviews,
                     ),
                     const SizedBox(height: 20),
@@ -86,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     FoodList(
                       productTitles: productTitles,
-                      imageList: imageList,
+                      imageList: foodImageList,
                       prices: prices,
                     ),
                   ] else if (selectedTabIndex == 1) ...[
@@ -96,9 +115,9 @@ class _HomePageState extends State<HomePage> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
-                    StoreList(
+                    StoreListVertical(
                       stores: stores,
-                      imageList: imageList,
+                      imageList: storeImageList,
                       reviews: reviews,
                     ),
                   ] else if (selectedTabIndex == 2) ...[
@@ -110,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 10),
                     FoodList(
                       productTitles: productTitles,
-                      imageList: imageList,
+                      imageList: foodImageList,
                       prices: prices,
                       isVertical: true,
                     ),
