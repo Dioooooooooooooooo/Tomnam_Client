@@ -33,28 +33,22 @@ class FoodList extends StatelessWidget {
               );
             },
           )
-        : Center(
-            child: SizedBox(
-              height: 220,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.75,
+        : SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              runSpacing: 10,
+              spacing: 10,
+              children: List.generate(productTitles.length, (index) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 10) / 2 - 10,
+                  child: FoodItem(
+                    imageUrl: imageList[index % imageList.length],
+                    title: productTitles[index],
+                    price: prices[index],
                   ),
-                  itemCount: productTitles.length,
-                  itemBuilder: (context, index) {
-                    return FoodItem(
-                      imageUrl: imageList[index % imageList.length],
-                      title: productTitles[index],
-                      price: prices[index],
-                    );
-                  },
-                ),
-              ),
+                );
+              }),
             ),
           );
   }

@@ -36,7 +36,6 @@ class _StorePageState extends State<StorePage> {
       body: SafeArea(
         child: ListView(
           children: [
-            // Banner with Profile Overlap
             Stack(
               clipBehavior: Clip.none,
               children: [
@@ -57,7 +56,7 @@ class _StorePageState extends State<StorePage> {
 
                 // Profile Section
                 Positioned(
-                  bottom: -43.5, // to overlap by half the profile size
+                  bottom: -43.5, // Adjust to overlap by half the profile size
                   left: 0,
                   right: 0,
                   child: Stack(
@@ -91,6 +90,23 @@ class _StorePageState extends State<StorePage> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Review Karenderya Stars
+                      Positioned(
+                        right: 18,
+                        top: 50,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: List.generate(
+                            5,
+                            (index) => const Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 20,
                             ),
                           ),
                         ),
@@ -156,7 +172,7 @@ class _StorePageState extends State<StorePage> {
               height: 0.5,
               color: AppColors.grayColor,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 25),
 
             // Food List Section
             FoodList(

@@ -106,7 +106,13 @@ class _SearchPageState extends State<SearchPage> {
                                         backgroundColor: AppColors.grayColor,
                                         foregroundColor: AppColors.blackColor,
                                         shape: null,
-                                        side: BorderSide.none,
+                                        side: BorderSide(
+                                          color: isFoodSelected
+                                              ? Colors.black
+                                              : Colors
+                                                  .transparent, // Border when selected
+                                          width: 2, // Thickness of the border
+                                        ),
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -124,7 +130,13 @@ class _SearchPageState extends State<SearchPage> {
                                         backgroundColor: AppColors.grayColor,
                                         foregroundColor: AppColors.blackColor,
                                         shape: null,
-                                        side: BorderSide.none,
+                                        side: BorderSide(
+                                          color: isStoreSelected
+                                              ? Colors.black
+                                              : Colors
+                                                  .transparent, // Border when selected
+                                          width: 2, // Thickness of the border
+                                        ),
                                       ),
                                       onPressed: () {
                                         setState(() {
