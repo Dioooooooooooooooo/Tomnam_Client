@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/models/food.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 import '../../../utils/constants/routes.dart';
 
 class FoodItem extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String price;
+  final Food food;
   final bool isVertical;
 
-  const FoodItem({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.price,
-    this.isVertical = false,
-  });
+  const FoodItem(this.food, this.isVertical, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, reserveFoodRoute);
+          Navigator.pushNamed(context, reserveFoodRoute, arguments: {
+            'food': food,
+          });
         },
         child: isVertical
             ? Container(
@@ -34,11 +30,20 @@ class FoodItem extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        imageUrl,
-                        height: 90,
-                        width: 110,
+                      child: Image.network(
+                        '${ApiService.baseURL}/${food.foodPhoto}',
+                        height: 140,
+                        width: 150,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Incase the image fails to load or null or whatever, show a placeholder image
+                          return Image.asset(
+                            'assets/images/pancit.jpg',
+                            height: 140,
+                            width: 150,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -46,7 +51,7 @@ class FoodItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          food.foodName,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -61,7 +66,7 @@ class FoodItem extends StatelessWidget {
                               size: 18,
                             ),
                             Text(
-                              price,
+                              food.unitPrice.toString(),
                               style: const TextStyle(
                                 color: AppColors.blackColor,
                               ),
@@ -83,11 +88,20 @@ class FoodItem extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              imageUrl,
+                            child: Image.network(
+                              '${ApiService.baseURL}/${food.foodPhoto}',
                               height: 140,
                               width: 150,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Incase the image fails to load or null or whatever, show a placeholder image
+                                return Image.asset(
+                                  'assets/images/pancit.jpg',
+                                  height: 140,
+                                  width: 150,
+                                  fit: BoxFit.cover,
+                                );
+                              },
                             ),
                           ),
                           Positioned(
@@ -111,7 +125,7 @@ class FoodItem extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              title,
+                              food.foodName,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -126,7 +140,7 @@ class FoodItem extends StatelessWidget {
                             size: 18,
                           ),
                           Text(
-                            price,
+                            food.unitPrice.toString(),
                             style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.mainOrangeColor,

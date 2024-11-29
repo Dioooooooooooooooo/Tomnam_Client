@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/models/karenderya.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 import '../../../utils/constants/routes.dart';
 
 class StoreListHorizontal extends StatelessWidget {
-  final List<String> stores;
-  final List<String> imageList;
-  final List<String> reviews;
+  final List<Karenderya> stores;
 
-  const StoreListHorizontal({
-    super.key,
-    required this.stores,
-    required this.imageList,
-    required this.reviews,
-  });
+  const StoreListHorizontal(
+    this.stores,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,13 @@ class StoreListHorizontal extends StatelessWidget {
             padding: const EdgeInsets.only(right: 15),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, storeRoute);
+                Navigator.pushNamed(
+                  context,
+                  storeRoute,
+                  arguments: {
+                    'store': stores[index],
+                  },
+                );
               },
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -38,16 +41,25 @@ class StoreListHorizontal extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        imageList[index],
+                      child: Image.network(
+                        '${ApiService.baseURL}/${stores[index].coverPhoto}',
                         height: 140,
                         width: 150,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Incase the image fails to load or null or whatever, show a placeholder image
+                          return Image.asset(
+                            'assets/images/cover-photo.png',
+                            height: 140,
+                            width: 150,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      stores[index],
+                      stores[index].name,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -59,7 +71,7 @@ class StoreListHorizontal extends StatelessWidget {
                         const Icon(Icons.star,
                             color: AppColors.mainOrangeColor, size: 18),
                         Text(
-                          " ${reviews[index]} reviews", // Show the reviews
+                          "${stores[index].rating}", // Show the reviews
                           style: const TextStyle(color: AppColors.blackColor),
                         ),
                       ],
