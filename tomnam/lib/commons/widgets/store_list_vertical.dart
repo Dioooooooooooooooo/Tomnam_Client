@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/models/karenderya.dart';
 import 'store_item.dart';
 
 // list of store items
 
 class StoreListVertical extends StatelessWidget {
-  final List<String> stores;
-  final List<String> imageList;
-  final List<String> reviews;
+  final List<Karenderya> stores;
 
-  const StoreListVertical({
-    super.key,
-    required this.stores,
-    required this.imageList,
-    required this.reviews,
-  });
+  const StoreListVertical(
+    this.stores,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +19,7 @@ class StoreListVertical extends StatelessWidget {
       itemCount: stores.length,
       itemBuilder: (context, index) {
         return StoreItem(
-          storeName: stores[index],
-          imageUrl: imageList[index % imageList.length],
-          reviews: reviews[index],
+          stores[index],
         );
       },
     );

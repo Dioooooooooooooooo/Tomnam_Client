@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/food_list.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
+import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/features/controllers/foods_controller.dart';
+import 'package:tomnam/models/food.dart';
+import 'package:tomnam/models/karenderya.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class StorePage extends StatefulWidget {
@@ -11,21 +16,42 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
-  final List<String> foodNames = [
-    "Adobo",
-    "BBQ Pork",
-    "Giniling Guisado",
-    "Pancit"
-  ];
+  final _logger = Logger(
+    printer: PrettyPrinter(),
+  );
 
-  final List<String> foodPrices = ["300", "650", "50", "100"];
+  late Karenderya store;
+  List<Food> _foods = [];
 
-  final List<String> foodImages = [
-    "assets/images/adobo.jpg",
-    "assets/images/bbq-pork.jpg",
-    "assets/images/giniling-guisado.jpg",
-    "assets/images/pancit.jpg",
-  ];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Fetch route arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null && arguments is Map<String, dynamic>) {
+      store = arguments['store'] as Karenderya;
+      _logger.d('Received store data: $store');
+      _fetchFoods(); // Fetch foods only after store is initialized
+    } else {
+      _logger.e('No store data found in arguments');
+    }
+  }
+
+  Future<void> _fetchFoods() async {
+    try {
+      final foods = await FoodsController.read(
+          null, // foodId
+          null, // foodName
+          store.Id);
+      _logger.d('Foods: $foods');
+      setState(() {
+        _foods = foods;
+      });
+    } catch (e) {
+      _logger.e('Error fetching Foods: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +68,17 @@ class _StorePageState extends State<StorePage> {
                 // Banner Image
                 Container(
                   height: 201,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/karenderya_3.jpg"),
+                      image: store.logoPhoto != null
+                          ? NetworkImage(
+                              '${ApiService.baseURL}/${store.coverPhoto}')
+                          : const AssetImage(
+                                  'assets/images/placeholder_cover.webp')
+                              as ImageProvider,
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(24),
                       bottomRight: Radius.circular(24),
                     ),
@@ -82,11 +113,15 @@ class _StorePageState extends State<StorePage> {
                             child: Container(
                               width: 69,
                               height: 69,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/danny-photo.png"),
+                                  image: store.logoPhoto != null
+                                      ? NetworkImage(
+                                          '${ApiService.baseURL}/${store.logoPhoto}')
+                                      : const AssetImage(
+                                              'assets/images/placeholder_logo.png')
+                                          as ImageProvider,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -97,20 +132,31 @@ class _StorePageState extends State<StorePage> {
 
                       // Review Karenderya Stars
                       Positioned(
-                        right: 18,
-                        top: 50,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(
-                            5,
-                            (index) => const Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
+                          right: 18,
+                          top: 50,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                store.rating.toString(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(
+                                  width: 5), // Space between stars and text
+                              // Generate the stars based on a dynamic rating
+                              ...List.generate(
+                                5,
+                                (index) => const Icon(
+                                  Icons.star,
+                                  color: Colors.yellow,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          )),
                     ],
                   ),
                 ),
@@ -121,25 +167,25 @@ class _StorePageState extends State<StorePage> {
             const SizedBox(height: 50),
             Container(
               color: AppColors.whiteColor,
-              child: const Center(
+              child: Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 21),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Karenderya ni Danny',
-                        style: TextStyle(
+                        store.name,
+                        style: const TextStyle(
                           color: Color(0xFF272827),
                           fontSize: 26,
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        'Brngy Labangon, Near CIT Backgate',
-                        style: TextStyle(
+                        '${store.locationStreet}, ${store.locationBarangay}, ${store.locationCity}, ${store.locationProvince}',
+                        style: const TextStyle(
                           color: Color(0xFF9796A1),
                           fontSize: 12,
                           fontFamily: 'Poppins',
@@ -154,11 +200,11 @@ class _StorePageState extends State<StorePage> {
 
             // About Section
             const SizedBox(height: 10),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Text(
-                'Hello. I’m Danny! A chef graduate at CIT. We give free munchkins as a general snack and free takoyaki to our frequent users.',
-                style: TextStyle(
+                store.description ?? '',
+                style: const TextStyle(
                   color: Color(0xFF272827),
                   fontSize: 14,
                   fontFamily: 'Poppins',
@@ -175,11 +221,7 @@ class _StorePageState extends State<StorePage> {
             const SizedBox(height: 25),
 
             // Food List Section
-            FoodList(
-              productTitles: foodNames,
-              imageList: foodImages,
-              prices: foodPrices,
-            ),
+            FoodList(_foods, true),
           ],
         ),
       ),

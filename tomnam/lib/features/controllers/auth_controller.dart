@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/services/api_service.dart';
-import '../authentication/models/user.dart';
+import '../../models/user.dart';
 import 'package:logger/logger.dart';
 
 class AuthController {

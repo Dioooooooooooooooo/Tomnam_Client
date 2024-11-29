@@ -8,7 +8,8 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseUrl = 'http://192.168.254.104:5144/api';
+  static const String baseURL = 'http://192.168.254.104:5144';
+  static const String apiURL = '$baseURL/api';
 
   // GET request example with token
   static Future<Map<String, dynamic>> getData(String endpoint) async {
@@ -16,7 +17,7 @@ class ApiService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
 
-      String url = baseUrl + endpoint;
+      String url = apiURL + endpoint;
 
       final response = await http.get(
         Uri.parse(url),
@@ -45,7 +46,7 @@ class ApiService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
 
-      String url = baseUrl + endpoint;
+      String url = apiURL + endpoint;
 
       final response = await http.post(
         Uri.parse(url),
@@ -79,7 +80,7 @@ class ApiService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken');
-      String url = baseUrl + endpoint;
+      String url = apiURL + endpoint;
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
 

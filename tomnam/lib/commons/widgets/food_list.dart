@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/models/food.dart';
 import 'food_item.dart';
 
 // list of food items
 
 class FoodList extends StatelessWidget {
-  final List<String> productTitles;
-  final List<String> imageList;
-  final List<String> prices;
   final bool isVertical;
+  final List<Food> foods;
 
-  const FoodList({
-    super.key,
-    required this.productTitles,
-    required this.imageList,
-    required this.prices,
-    this.isVertical = false,
-  });
+  const FoodList(this.foods, this.isVertical, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +16,11 @@ class FoodList extends StatelessWidget {
         ? ListView.builder(
             primary: false,
             shrinkWrap: true,
-            itemCount: productTitles.length,
+            itemCount: foods.length,
             itemBuilder: (context, index) {
               return FoodItem(
-                imageUrl: imageList[index % imageList.length],
-                title: productTitles[index],
-                price: prices[index],
-                isVertical: true,
+                foods[index],
+                true,
               );
             },
           )
@@ -39,13 +30,12 @@ class FoodList extends StatelessWidget {
               alignment: WrapAlignment.center,
               runSpacing: 10,
               spacing: 10,
-              children: List.generate(productTitles.length, (index) {
+              children: List.generate(foods.length, (index) {
                 return SizedBox(
                   width: (MediaQuery.of(context).size.width - 10) / 2 - 10,
                   child: FoodItem(
-                    imageUrl: imageList[index % imageList.length],
-                    title: productTitles[index],
-                    price: prices[index],
+                    foods[index],
+                    true,
                   ),
                 );
               }),

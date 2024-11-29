@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
+import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/models/food.dart';
 
 class ReserveFoodPage extends StatefulWidget {
   const ReserveFoodPage({super.key});
@@ -9,9 +12,27 @@ class ReserveFoodPage extends StatefulWidget {
 }
 
 class _ReserveFoodPageState extends State<ReserveFoodPage> {
+  final _logger = Logger(
+    printer: PrettyPrinter(),
+  );
+
   TimeOfDay _selectedTime = const TimeOfDay(hour: 12, minute: 0);
   DateTime _selectedDate = DateTime.now();
   int _quantity = 1; // Initial quantity
+  late Food food;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Fetch route arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null && arguments is Map<String, dynamic>) {
+      food = arguments['food'] as Food;
+    } else {
+      _logger.e('No store data found in arguments');
+    }
+  }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -66,9 +87,9 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
               // Banner image without padding
               Container(
                 height: 260,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/images/adobo.jpg"),
+                    image: NetworkImage('${ApiService.baseURL}/${food.foodPhoto}',),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -91,20 +112,20 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Food name and price
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Adobo',
-                          style: TextStyle(
+                          food.foodName,
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
                             color: Colors.black,
                           ),
                         ),
                         Text(
-                          'Php40.00',
-                          style: TextStyle(
+                          food.unitPrice.toString(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: Colors.black,
@@ -113,9 +134,9 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Masarap homemade adobo',
-                      style: TextStyle(
+                    Text(
+                      food.foodDescription,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
