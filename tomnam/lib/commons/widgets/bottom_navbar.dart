@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
-class CustomNavBar extends StatefulWidget {
+class BottomNavBar extends StatefulWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const CustomNavBar({
+  const BottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
   });
 
   @override
-  CustomNavBarState createState() => CustomNavBarState();
+  BottomNavBarState createState() => BottomNavBarState();
 }
 
-class CustomNavBarState extends State<CustomNavBar> {
+class BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(

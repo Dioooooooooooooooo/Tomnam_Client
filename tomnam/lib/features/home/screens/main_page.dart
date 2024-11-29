@@ -3,9 +3,9 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
-import 'package:tomnam/commons/widgets/custom_navbar.dart';
+import 'package:tomnam/commons/widgets/bottom_navbar.dart';
 
-import '../../../commons/widgets/custom_searchbar.dart';
+import '../../../commons/widgets/upper_navbar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -34,21 +34,10 @@ class _MainScreenState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomSearchBar(
-          hintText: "Search here...",
-          onChanged: (value) {
-            logger.i('Search text: $value');
-          },
-          onSearchPressed: () {
-            logger.i('Search button pressed');
-          },
-          onClearPressed: () {
-            logger.i('Clear button pressed');
-          },
-        ),
+        flexibleSpace: const UpperNavBar(),
       ),
       body: _pages[_currentIndex],
-      bottomNavigationBar: CustomNavBar(
+      bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onNavTap,
       ),

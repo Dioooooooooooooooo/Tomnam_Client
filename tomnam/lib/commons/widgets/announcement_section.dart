@@ -9,24 +9,21 @@ class AnnouncementSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 300,
-      decoration: BoxDecoration(
+      height: 400,
+      decoration: const BoxDecoration(
         gradient: AppColors.gradientGreenColor,
-        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Announcement Text with Bold Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: RichText(
-              textAlign: TextAlign.center,
               text: const TextSpan(
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 22,
                 ),
                 children: [
                   TextSpan(text: "You have "),
@@ -34,7 +31,7 @@ class AnnouncementSection extends StatelessWidget {
                     text: "2 orders",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 24,
                     ),
                   ),
                   TextSpan(text: " reserved today."),
@@ -42,33 +39,50 @@ class AnnouncementSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          // Buttons for Each Order
-          _buildOrderButton("Karenderya ni Danny 12:00pm", context),
-          const SizedBox(height: 10),
-          _buildOrderButton("Boarding House ni James 3:00pm", context),
+          const SizedBox(height: 35),
+          _buildOrderButton("Karenderya ni Danny", "12:00pm", context),
+          const SizedBox(height: 12),
+          _buildOrderButton("Boarding House ni James", "3:00pm", context),
         ],
       ),
     );
   }
 
-  Widget _buildOrderButton(String orderDetails, BuildContext context) {
+  Widget _buildOrderButton(
+      String orderDetails, String time, BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, calendarRoute);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 26),
+        margin:
+            const EdgeInsets.only(left: 20, right: 20), // Margin for spacing
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Text(
-          orderDetails,
-          style: const TextStyle(
-            color: AppColors.mainGreenColor,
-            fontSize: 13,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                orderDetails,
+                style: const TextStyle(
+                  color: AppColors.mainGreenColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Text(
+              time,
+              style: const TextStyle(
+                color: AppColors.mainGreenColor,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
-
-import '../../../commons/widgets/custom_searchbar.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final logger = Logger();
     return Scaffold(
-      appBar: AppBar(
-        title: CustomSearchBar(
-          hintText: "Search here...",
-          onChanged: (value) {
-            logger.i('Search text: $value');
-          },
-          onSearchPressed: () {
-            logger.i('Search button pressed');
-          },
-          onClearPressed: () {
-            logger.i('Clear button pressed');
-          },
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
