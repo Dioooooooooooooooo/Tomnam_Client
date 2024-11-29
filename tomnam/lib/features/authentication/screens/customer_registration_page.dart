@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
+import 'package:tomnam/features/controllers/auth_controller.dart';
 
 class CustomerRegistrationPage extends StatefulWidget {
   const CustomerRegistrationPage({super.key});
@@ -10,13 +12,61 @@ class CustomerRegistrationPage extends StatefulWidget {
 }
 
 class _CustomerRegistrationPageState extends State<CustomerRegistrationPage> {
+  final _authController = AuthController();
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final logger = Logger();
+  final _logger = Logger(
+    printer: PrettyPrinter(),
+  );
+
+  void _handleSignUp() async {
+    if (_formKey.currentState!.validate()) {
+      final firstName = _firstNameController.text.trim();
+      final lastname = _lastNameController.text.trim();
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+      final confirmPassword = _confirmPasswordController.text.trim();
+
+      if (password != confirmPassword) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match')),
+        );
+        return;
+      }
+
+      try {
+        final message = await _authController.register({
+          'FirstName': firstName,
+          'LastName': lastname,
+          'Email': email,
+          'Password': password,
+          'ConFirmPassword': confirmPassword,
+          'UserRole': 'Customer',
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      } catch (e, stackTrace) {
+        if (!context.mounted) return;
+        String? message;
+        if (e is ResponseException) {
+          message = e.error;
+        } else {
+          message = 'An error occurred during registration';
+        }
+        _logger.d(stackTrace);
+        _logger.e('An error occurred during registration: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -153,12 +203,5 @@ class _CustomerRegistrationPageState extends State<CustomerRegistrationPage> {
         return null;
       },
     );
-  }
-
-  void _handleSignUp() {
-    if (_formKey.currentState!.validate()) {
-      // Implement sign up logic here
-      logger.i('Sign up pressed');
-    }
   }
 }
