@@ -1,5 +1,8 @@
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:tomnam/features/authentication/controllers/login_controller.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
+import 'package:tomnam/features/controllers/auth_controller.dart';
+import '../../../utils/constants/routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,7 +14,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _loginController = LoginController();
+  final _authController = AuthController();
+
+  final _logger = Logger();
 
   @override
   void dispose() {
@@ -20,10 +25,52 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     final email = _emailController.text;
     final password = _passwordController.text;
-    _loginController.handleLogin(context, email, password);
+
+    if (email.isEmpty || password.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter email and password')),
+        );
+      }
+      return;
+    }
+
+    try {
+      final user = await _authController.login(email, password);
+
+      if (!context.mounted) return;
+
+      if (user != null) {
+        // Login successful
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          mainPageRoute,
+          (route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login successful!')),
+        );
+      } else {
+        // Login failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid email or password')),
+        );
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      String? message;
+      if (e is ResponseException) {
+        message = e.error;
+      } else {
+        message = 'An error occurred during login';
+      }
+      _logger.e('An error occurred during login: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
   }
 
   @override

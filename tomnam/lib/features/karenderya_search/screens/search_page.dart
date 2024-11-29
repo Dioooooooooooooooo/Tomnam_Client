@@ -4,6 +4,10 @@ import 'package:tomnam/commons/widgets/custom_searchbar.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import 'package:tomnam/commons/widgets/store_list_vertical.dart';
 import 'package:tomnam/commons/widgets/food_list.dart';
+import 'package:tomnam/features/controllers/foods_controller.dart';
+import 'package:tomnam/models/food.dart';
+import 'package:tomnam/models/karenderya.dart';
+import 'package:tomnam/features/controllers/karenderyas_controller.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class SearchPage extends StatefulWidget {
@@ -154,77 +158,72 @@ class _SearchPageState extends State<SearchPage> {
 
                             // Show food results based on query if the 'Food' button is selected
                             if (isFoodSelected) ...[
-                              FoodList(
-                                productTitles: foodNames
-                                    .where((food) => food
-                                        .toLowerCase()
-                                        .contains(query.toLowerCase()))
-                                    .toList(),
-                                imageList: foodImages
-                                    .where((image) =>
-                                        foodNames[foodImages.indexOf(image)]
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()))
-                                    .toList(),
-                                prices: foodPrices
-                                    .where((price) =>
-                                        foodNames[foodPrices.indexOf(price)]
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()))
-                                    .toList(),
-                                isVertical: true,
+                              FutureBuilder<List<Food>>(
+                                future: FoodsController.read(
+                                  null, // foodId
+                                  query, // foodName
+                                  null
+                                ), // Call your async function
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    // Show a loading indicator while waiting for the result
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    // Handle errors
+                                    return Center(
+                                      child: Text('Error: ${snapshot.error}'),
+                                    );
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty) {
+                                    // Render the fetched stores
+                                    return FoodList(
+                                        snapshot.data ?? [], true);
+                                  } else {
+                                    // Handle empty results
+                                    return const Center(
+                                        child: Text('No stores found.'));
+                                  }
+                                },
                               ),
 
-                              // message if no food was found
-                              if (foodNames
-                                  .where((food) => food
-                                      .toLowerCase()
-                                      .contains(query.toLowerCase()))
-                                  .isEmpty) ...[
-                                const SizedBox(height: 10),
-                                Text(
-                                  "No food results found for '$query'",
-                                  style: const TextStyle(
-                                      fontSize: 16, color: Colors.grey),
-                                ),
-                              ],
                             ],
 
                             // Show store results based on query if the 'Store' button is selected
                             if (isStoreSelected) ...[
-                              StoreListVertical(
-                                stores: stores
-                                    .where((store) => store
-                                        .toLowerCase()
-                                        .contains(query.toLowerCase()))
-                                    .toList(),
-                                imageList: storeImageList
-                                    .where((image) =>
-                                        stores[storeImageList.indexOf(image)]
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()))
-                                    .toList(),
-                                reviews: storeReviews
-                                    .where((review) =>
-                                        stores[storeReviews.indexOf(review)]
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()))
-                                    .toList(),
+                              FutureBuilder<List<Karenderya>>(
+                                future: KarenderyasController.read(
+                                  null, // karenderyaId
+                                  query, // name
+                                  null, // locationStreet
+                                  null, // locationBarangay
+                                  null, // locationCity
+                                  null, // locationProvince
+                                ), // Call your async function
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    // Show a loading indicator while waiting for the result
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    // Handle errors
+                                    return Center(
+                                      child: Text('Error: ${snapshot.error}'),
+                                    );
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty) {
+                                    // Render the fetched stores
+                                    return StoreListVertical(
+                                        snapshot.data ?? []);
+                                  } else {
+                                    // Handle empty results
+                                    return const Center(
+                                        child: Text('No stores found.'));
+                                  }
+                                },
                               ),
-
-                              // message if no store results found
-                              if (stores
-                                  .where((store) => store
-                                      .toLowerCase()
-                                      .contains(query.toLowerCase()))
-                                  .isEmpty) ...[
-                                const SizedBox(height: 10),
-                                Text(
-                                  "No stores found for '$query'",
-                                  style: const TextStyle(
-                                      fontSize: 16, color: Colors.grey),
-                                ),
-                              ],
                             ],
                           ],
                         ),
@@ -237,11 +236,11 @@ class _SearchPageState extends State<SearchPage> {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 15),
-                  StoreListVertical(
-                    stores: stores,
-                    imageList: storeImageList,
-                    reviews: storeReviews,
-                  ),
+                  // StoreListVertical(
+                  //   stores: stores,
+                  //   imageList: storeImageList,
+                  //   reviews: storeReviews,
+                  // ),
                 ],
               ),
             ),
