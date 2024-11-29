@@ -3,9 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/headline_text.dart';
 import 'package:tomnam/commons/widgets/store_list_vertical.dart';
 import '../../../commons/widgets/announcement_section.dart';
-import '../../../commons/widgets/tab_bar.dart';
 import '../../../commons/widgets/store_list_horizontal.dart';
-import '../../../commons/widgets/food_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

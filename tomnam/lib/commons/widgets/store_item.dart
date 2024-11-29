@@ -18,7 +18,14 @@ class StoreItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, storeRoute);
+        Navigator.pushNamed(
+          context,
+          storeRoute,
+          arguments: {
+            'storeName': storeName,
+            'imageUrl': imageUrl,
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),

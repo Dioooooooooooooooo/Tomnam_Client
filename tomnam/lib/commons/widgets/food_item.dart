@@ -53,13 +53,21 @@ class FoodItem extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                        price,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.attach_money,
+                            color: AppColors.mainOrangeColor,
+                            size: 18,
+                          ),
+                          Text(
+                            price,
+                            style: const TextStyle(
+                              color: AppColors.blackColor,
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ],

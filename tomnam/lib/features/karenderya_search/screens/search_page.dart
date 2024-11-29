@@ -37,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
     "Pancit"
   ];
 
-  final List<String> foodPrices = ["\$300", "\$650", "\$50", "\$100"];
+  final List<String> foodPrices = ["300", "650", "50", "100"];
 
   final List<String> foodImages = [
     "assets/images/adobo.jpg",

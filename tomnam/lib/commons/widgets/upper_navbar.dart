@@ -12,7 +12,6 @@ class UpperNavBar extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Search Button
           TextButton(
             onPressed: () => Navigator.pushNamed(context, searchPageRoute),
             style: TextButton.styleFrom(
@@ -26,18 +25,15 @@ class UpperNavBar extends StatelessWidget {
                 Icon(
                   Icons.search,
                   color: Colors.white,
-                  // White icon color
                 ),
                 SizedBox(width: 8),
               ],
             ),
           ),
-
-          // Cart Button
           IconButton(
             icon: const Icon(
               Icons.shopping_cart,
-              color: Colors.white, // White icon color
+              color: Colors.white,
             ),
             onPressed: () => Navigator.pushNamed(context, addToCartRoute),
           ),
