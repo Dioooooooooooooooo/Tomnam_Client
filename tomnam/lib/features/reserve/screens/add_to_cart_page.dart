@@ -3,7 +3,6 @@ import 'package:tomnam/commons/widgets/store_cart_item.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
-import 'checkout_page.dart';
 
 class AddToCartPage extends StatefulWidget {
   const AddToCartPage({super.key});
