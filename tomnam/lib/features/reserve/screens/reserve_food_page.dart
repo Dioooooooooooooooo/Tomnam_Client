@@ -89,7 +89,9 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
                 height: 260,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage('${ApiService.baseURL}/${food.foodPhoto}',),
+                    image: NetworkImage(
+                      '${ApiService.baseURL}/${food.foodPhoto}',
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),

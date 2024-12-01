@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
@@ -30,12 +31,27 @@ class UpperNavBar extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
+          Center(
+            child: badges.Badge(
+              badgeContent: const Text(
+                '0',
+                style: TextStyle(color: Colors.white),
+              ),
+              badgeStyle: const badges.BadgeStyle(
+                badgeColor: AppColors.accentRedOrangeColor,
+              ),
+              badgeAnimation: const badges.BadgeAnimation.slide(
+                animationDuration: Duration(milliseconds: 300),
+              ),
+              position: badges.BadgePosition.topEnd(top: -5, end: -5),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.pushNamed(context, addToCartRoute),
+              ),
             ),
-            onPressed: () => Navigator.pushNamed(context, addToCartRoute),
           ),
         ],
       ),
