@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/karenderya_display_widget.dart';
 import 'package:tomnam/commons/widgets/profile_settings_profile.dart';
 import 'package:tomnam/features/controllers/auth_controller.dart';
+import 'package:tomnam/features/controllers/karenderyas_controller.dart';
 import 'package:tomnam/features/controllers/profile_controller.dart';
 import 'package:tomnam/models/karenderya.dart';
 import 'package:tomnam/models/user.dart';
@@ -24,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   );
   bool _isLoading = true;
   User? _user;
-  Karenderya? karenderya;
+  Karenderya? _karenderya;
 
   @override
   void initState() {
@@ -38,10 +39,37 @@ class _ProfilePageState extends State<ProfilePage> {
       _logger.d('Fetched user: $user');
       setState(() {
         _user = user;
+        if (_user!.role == 'Owner') {
+          _fetchKarenderya();
+        } else {
+          _isLoading = false;
+        }
       });
-      _isLoading = false;
     } catch (e) {
       _logger.e('Error fetching user: $e');
+    }
+  }
+
+  Future<void> _fetchKarenderya() async {
+    try {
+      final karenderya = await KarenderyasController.read(
+          _user!.karenderyaId,
+          null, // karenderyaName
+          null, // locationStreet
+          null, // locationBarangay
+          null, // locationCity
+          null // locationProvince
+          );
+      _logger.d('Karenderya: $karenderya');
+      setState(() {
+        _karenderya = karenderya[0];
+        _isLoading = false;
+      });
+    } catch (e) {
+      _logger.e('Error fetching Karenderya: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -79,9 +107,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ProfileSettingsProfile(_user!.firstName),
                         const SizedBox(height: 10),
                         _user!.role == 'Customer'
-                            ? BehaviorScore(_user!.behaviorScore
-                                .toString()) // Customer Profile
-                            : const KarenderyaDisplay(""), // Owner
+                            ? BehaviorScore(_user!, false) // Customer Profile
+                            : KarenderyaDisplay(_karenderya!), // Owner
                         const SizedBox(height: 20)
                       ],
                     ),

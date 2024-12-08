@@ -44,6 +44,8 @@ class AuthController {
 
     if (profile.role == "Customer") {
       profile.behaviorScore = profileData['behaviorScore'];
+    } else {
+      profile.karenderyaId = profileData['karenderyaId'];
     }
 
     prefs.setString('user', jsonEncode(profileData));

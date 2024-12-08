@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/commons/widgets/karenderya_display_widget.dart';
 import 'package:tomnam/features/authentication/screens/customer_registration_page.dart';
 import 'package:tomnam/features/authentication/screens/login_page.dart';
 import 'package:tomnam/features/authentication/screens/owner_registration_page.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
+import 'package:tomnam/features/profile_management/screens/behavior_score_page.dart';
+import 'package:tomnam/features/profile_management/screens/karenderya_display_edit_page.dart';
 import 'package:tomnam/features/reserve/add_to_cart_page.dart';
 import 'package:tomnam/features/reserve/reserve_food_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
@@ -43,6 +46,9 @@ class MyApp extends StatelessWidget {
         addToCartRoute: (context) => const AddToCartPage(),
         searchPageRoute: (context) => const SearchPage(),
         mainPageRoute: (context) => const MainPage(),
+        behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),
+        editKarenderyaDisplayRoute: (context) =>
+            const KarenderyaDisplayEditPage(),
       },
     );
   }

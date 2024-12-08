@@ -4,8 +4,9 @@ class User {
   final String role;
   final String firstName;
   final String lastName;
-  
+
   int? behaviorScore;
+  String? karenderyaId;
 
   User(
       {required this.Id,
@@ -13,7 +14,8 @@ class User {
       required this.role,
       required this.firstName,
       required this.lastName,
-      this.behaviorScore});
+      this.behaviorScore,
+      this.karenderyaId});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -24,6 +26,8 @@ class User {
       lastName: json['lastName'] as String,
       behaviorScore:
           json['behaviorScore'] is int ? json['behaviorScore'] : null,
+      karenderyaId:
+          json['karenderyaId'] is String ? json['karenderyaId'] : null,
     );
   }
 }
