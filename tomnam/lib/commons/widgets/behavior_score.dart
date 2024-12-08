@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 
 class BehaviorScore extends StatelessWidget {
-  const BehaviorScore({super.key});
+  final String score;
+  const BehaviorScore(this.score, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
       height: 80,
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: AppColors.blackColor.withOpacity(0.05),
+        color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column( // Use Column to allow multiple children
+      child: Column(
+        // Use Column to allow multiple children
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Row(
+        children: [
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'BEHAVIOR SCORE',
+                style: TextStyle(fontSize: 18.0),
                 overflow: TextOverflow.ellipsis,
               ),
               Icon(Icons.arrow_drop_down_circle_outlined),
@@ -30,10 +33,11 @@ class BehaviorScore extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.credit_score_outlined),
-              SizedBox(width: 5), // Add spacing between widgets
+              const Icon(Icons.credit_score_outlined),
+              const SizedBox(width: 5), // Add spacing between widgets
               Text(
-                '600 Points',
+                "$score Points",
+                style: const TextStyle(fontSize: 16.0),
                 overflow: TextOverflow.ellipsis,
               ),
             ],
