@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/reservation_details.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
 import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/features/controllers/cart_item_controller.dart';
 import 'package:tomnam/models/food.dart';
 
 class ReserveFoodPage extends StatefulWidget {
@@ -178,7 +179,18 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+
+                CartItemController.create({
+                  'foodId': food.Id,
+                  'quantity': _quantity
+                }).then((data) {
+                  _logger.i('Added to cart');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Added to cart')),
+                  );
+                });
+              },
               child: const Text(
                 'Add to Cart',
                 style: TextStyle(color: Colors.white, fontSize: 16),

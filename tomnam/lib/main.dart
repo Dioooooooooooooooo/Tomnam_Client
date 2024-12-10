@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tomnam/features/authentication/screens/customer_registration_page.dart';
 import 'package:tomnam/features/authentication/screens/login_page.dart';
 import 'package:tomnam/features/authentication/screens/owner_registration_page.dart';
@@ -7,16 +8,28 @@ import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
 import 'package:tomnam/features/reserve/screens/add_to_cart_page.dart';
 import 'package:tomnam/features/reserve/screens/checkout_page.dart';
 import 'package:tomnam/features/reserve/screens/reserve_food_page.dart';
+import 'package:tomnam/features/profile_management/screens/behavior_score_page.dart';
+import 'package:tomnam/features/profile_management/screens/karenderya_display_edit_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
+import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/welcome_page.dart';
 import '/utils/constants/routes.dart';
+import 'package:tomnam/provider/karenderya_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => KarenderyaProvider()),
+        ChangeNotifierProvider(create: (_) => CartItemProvider())
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -49,6 +62,9 @@ class MyApp extends StatelessWidget {
               as List<Map<String, dynamic>>;
           return CheckoutPage(selectedItems: selectedItems);
         },
+        behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),
+        editKarenderyaDisplayRoute: (context) =>
+            const KarenderyaDisplayEditPage(),
       },
     );
   }

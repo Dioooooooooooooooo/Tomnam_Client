@@ -8,7 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseURL = 'http://192.168.0.106:5144';
+  static const String baseURL = 'http://192.168.43.44:5144';
   static const String apiURL = '$baseURL/api';
 
   // GET request example with token
@@ -39,9 +39,8 @@ class ApiService {
 
   // POST request example with token
   static Future<Map<String, dynamic>> postData(
-      String endpoint, Map<String, dynamic> data) async {
+    String endpoint, Map<String, dynamic> data) async {
     try {
-      _logger.d(data);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
@@ -58,16 +57,61 @@ class ApiService {
       );
 
       final body = json.decode(response.body);
+      _logger.d(body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return body;
+      } else {
+        String message = body['message'];
 
+        String error;
+        if (body['error'] is List<dynamic>){
+          error = (body['error'] as List).join(" ");
+        }else{
+          error = body['error'];
+        }
+
+        _logger.e(message);
+        _logger.e(error);
+        throw ResponseException(message, error, response.statusCode);
+      }
+    } catch (e, stackTrace) {
+      _logger.e(stackTrace);
+      _logger.e('Error in postData: $e');
+      rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>> putData(
+    String endpoint, Map<String, dynamic> data) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken'); // Retrieve token
+
+      String url = apiURL + endpoint;
+
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(data),
+      );
+
+      final body = json.decode(response.body);
+      _logger.d(body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return body;
       } else {
         String message = body['message'];
         String error = body['error'];
+        _logger.e(message);
+        _logger.e(error);
         throw ResponseException(message, error, response.statusCode);
       }
-    } catch (e) {
-      _logger.e('Error in postData: $e');
+    } catch (e, stackTrace) {
+      _logger.e(stackTrace);
+      _logger.e('Error in putData: $e');
       rethrow;
     }
   }

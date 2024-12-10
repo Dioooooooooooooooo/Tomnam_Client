@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
+import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class UpperNavBar extends StatelessWidget {
   const UpperNavBar({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+    final cartItemProvider = Provider.of<CartItemProvider>(context, listen: false);
+
     return AppBar(
       backgroundColor: AppColors.mainGreenColor,
       title: Row(
@@ -33,9 +39,9 @@ class UpperNavBar extends StatelessWidget {
           ),
           Center(
             child: badges.Badge(
-              badgeContent: const Text(
-                '0',
-                style: TextStyle(color: Colors.white),
+              badgeContent: Text(
+                cartItemProvider.cartItems.length.toString(),
+                style: const TextStyle(color: Colors.white),
               ),
               badgeStyle: const badges.BadgeStyle(
                 badgeColor: AppColors.accentRedOrangeColor,

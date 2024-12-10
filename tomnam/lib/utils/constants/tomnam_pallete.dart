@@ -5,6 +5,8 @@ class AppColors {
   static const Color secondMainGreenColor = Color(0xFF008D71);
   static const Color mainOrangeColor = Color(0xFFF6A747);
   static const Gradient gradientGreenColor = LinearGradient(
+    begin: Alignment(0.00, -1.00),
+    end: Alignment(0, 1),
     colors: [
       Color(0xFF008D71),
       Color(0xFF015B55),

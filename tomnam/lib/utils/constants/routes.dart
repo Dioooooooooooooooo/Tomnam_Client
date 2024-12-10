@@ -11,3 +11,5 @@ const searchPageRoute = '/search_page/';
 const addToCartRoute = '/add_to_cart/';
 const mainPageRoute = '/main_page';
 const checkoutPageRoute = '/checkout_page';
+const behaviorScoreClickedRoute = '/behavior_score/';
+const editKarenderyaDisplayRoute = '/edit_karenderya_display/';

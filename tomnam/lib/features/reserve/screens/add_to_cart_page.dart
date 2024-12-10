@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:tomnam/commons/widgets/store_cart_item.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
+import 'package:tomnam/features/controllers/cart_item_controller.dart';
+import 'package:tomnam/models/cart_item.dart';
+import 'package:tomnam/models/karenderya.dart';
+import 'package:tomnam/provider/cart_item_provider.dart';
+import 'package:tomnam/provider/karenderya_provider.dart';
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
@@ -12,6 +19,38 @@ class AddToCartPage extends StatefulWidget {
 }
 
 class _AddToCartPageState extends State<AddToCartPage> {
+  bool isLoading = true;
+  List<Karenderya> _stores = [];
+  List<Karenderya> _currentStores = [];
+  List<List<CartItem>> _cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final storeProvider = Provider.of<KarenderyaProvider>(context, listen: false);
+    _stores = storeProvider.stores;
+
+
+    final cartItemProvider = Provider.of<CartItemProvider>(context, listen: false);
+    CartItemController.read().then((cartItems) {
+      cartItemProvider.setCartItems(cartItems);
+    });
+    final cartItemsData = cartItemProvider.cartItems;
+
+    for (var element in cartItemsData) {
+      Karenderya k = _stores.firstWhere((store) => store.Id == element.food.karenderyaId);
+      if(!_currentStores.contains(k)) {
+        _currentStores.add(k);
+        List<CartItem> karenderyaCartItems = cartItemsData.where((element) => element.food.karenderyaId == k.Id).toList();
+        _cartItems.add(karenderyaCartItems);
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   final List<String> storeNames = [
     "Danny's Karenderya",
     "Aleng Neneng's Food",
@@ -65,15 +104,15 @@ class _AddToCartPageState extends State<AddToCartPage> {
   bool selectAll = false;
 
   // To calculate the total price of selected items
-  int get totalPrice {
-    int total = 0;
-    for (int storeIndex = 0; storeIndex < storeNames.length; storeIndex++) {
+  double get totalPrice {
+    double total = 0;
+    for (int storeIndex = 0; storeIndex < _currentStores.length; storeIndex++) {
       for (int foodIndex = 0;
-          foodIndex < foodNames[storeIndex].length;
+          foodIndex < _cartItems[storeIndex].length;
           foodIndex++) {
-        if (isChecked[storeIndex][foodIndex]) {
-          total += foodPrices[storeIndex][foodIndex] *
-              quantities[storeIndex][foodIndex];
+        if (_cartItems[storeIndex][foodIndex].isChecked) {
+          total += _cartItems[storeIndex][foodIndex].food.unitPrice *
+              _cartItems[storeIndex][foodIndex].quantity;
         }
       }
     }
@@ -126,11 +165,13 @@ class _AddToCartPageState extends State<AddToCartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(flexibleSpace: const UpperNavBar()),
-      body: Column(
+      body: 
+      isLoading ? const Center(child: CircularProgressIndicator()) :
+      Column(
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: storeNames.length,
+              itemCount: _currentStores.length,
               itemBuilder: (context, storeIndex) {
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -153,7 +194,7 @@ class _AddToCartPageState extends State<AddToCartPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Text(
-                          storeNames[storeIndex], // Display store name
+                          _currentStores[storeIndex].name, // Display store name
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -164,23 +205,29 @@ class _AddToCartPageState extends State<AddToCartPage> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: foodNames[storeIndex].length,
+                        itemCount: _cartItems[storeIndex].length,
                         itemBuilder: (context, foodIndex) {
                           return StoreCartItem(
-                            storeName: storeNames[storeIndex],
-                            foodName: foodNames[storeIndex][foodIndex],
-                            foodPrice: foodPrices[storeIndex][foodIndex],
-                            foodImage: foodImages[storeIndex][foodIndex],
-                            isChecked: isChecked[storeIndex][foodIndex],
-                            quantity: quantities[storeIndex][foodIndex],
+                            cartItem: _cartItems[storeIndex][foodIndex],
+                            karenderya: _currentStores[storeIndex],
                             onCheckChanged: (value) {
-                              setState(() {
-                                isChecked[storeIndex][foodIndex] = value!;
+                              CartItemController.update(
+                                _cartItems[storeIndex][foodIndex].Id,
+                                {'isChecked': value},
+                              ).then((data) {
+                                setState(() {
+                                  _cartItems[storeIndex][foodIndex].isChecked = data.isChecked;
+                                });
                               });
                             },
                             onQuantityChanged: (newQuantity) {
-                              setState(() {
-                                quantities[storeIndex][foodIndex] = newQuantity;
+                              CartItemController.update(
+                                _cartItems[storeIndex][foodIndex].Id,
+                                {'quantity': newQuantity},
+                              ).then((data) {
+                                setState(() { 
+                                  _cartItems[storeIndex][foodIndex].quantity = data.quantity;
+                                });
                               });
                             },
                           );
@@ -207,7 +254,7 @@ class _AddToCartPageState extends State<AddToCartPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildFooterItem('All', selectAll: true, onChanged: toggleSelectAll),
-          _buildFooterItem('Php $totalPrice.00', textColor: Colors.red),
+          _buildFooterItem('Php $totalPrice', textColor: Colors.red),
           _buildFooterItem('Reserve',
               isButton: true, onTap: goToCheckout, textColor: Colors.white),
         ],

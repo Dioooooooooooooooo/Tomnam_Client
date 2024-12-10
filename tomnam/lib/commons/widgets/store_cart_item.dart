@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/models/cart_item.dart';
+import 'package:tomnam/models/karenderya.dart';
 
 class StoreCartItem extends StatelessWidget {
-  final String storeName;
-  final String foodName;
-  final int foodPrice;
-  final String foodImage;
-  final bool isChecked;
-  final int quantity;
+  final CartItem cartItem;
+  final Karenderya karenderya;
   final Function(bool?) onCheckChanged;
   final Function(int) onQuantityChanged;
 
   const StoreCartItem({
-    Key? key,
-    required this.storeName,
-    required this.foodName,
-    required this.foodPrice,
-    required this.foodImage,
-    required this.isChecked,
-    required this.quantity,
+    super.key,
+    required this.cartItem,
+    required this.karenderya,
     required this.onCheckChanged,
     required this.onQuantityChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +26,33 @@ class StoreCartItem extends StatelessWidget {
           Row(
             children: [
               Checkbox(
-                value: isChecked,
+                value: cartItem.isChecked,
                 onChanged: onCheckChanged,
               ),
-              Image.asset(
-                foodImage,
-                width: 50,
-                height: 50,
+              Image.network(
+                '${ApiService.baseURL}/${cartItem.food.foodPhoto}',
+                height: 140,
+                width: 150,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Incase the image fails to load or null or whatever, show a placeholder image
+                  return Image.asset(
+                    'assets/images/cover-photo.png',
+                    height: 140,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
+
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(foodName, style: const TextStyle(fontSize: 16)),
-                      Text("Php $foodPrice.00",
+                      Text(cartItem.food.foodName, style: const TextStyle(fontSize: 16)),
+                      Text("Php ${cartItem.food.unitPrice}.00",
                           style: const TextStyle(fontSize: 14)),
                     ],
                   ),
@@ -56,12 +61,12 @@ class StoreCartItem extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.remove),
                 onPressed:
-                    quantity > 1 ? () => onQuantityChanged(quantity - 1) : null,
+                    cartItem.quantity > 1 ? () => onQuantityChanged(cartItem.quantity - 1) : null,
               ),
-              Text(quantity.toString(), style: const TextStyle(fontSize: 16)),
+              Text(cartItem.quantity.toString(), style: const TextStyle(fontSize: 16)),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => onQuantityChanged(quantity + 1),
+                onPressed: () => onQuantityChanged(cartItem.quantity + 1),
               ),
             ],
           ),

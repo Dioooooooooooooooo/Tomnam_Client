@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/services/api_service.dart';
 import '../../models/user.dart';
@@ -10,6 +12,7 @@ class AuthController {
     final response = await ApiService.postData("/auth/register", registerData);
 
     final data = response['data'];
+    _logger.d(data);
     _logger.d('Registration successful: $data');
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,7 +45,18 @@ class AuthController {
 
     if (profile.role == "Customer") {
       profile.behaviorScore = profileData['behaviorScore'];
+    } else {
+      profile.karenderyaId = profileData['karenderyaId'];
     }
+
+    prefs.setString('user', jsonEncode(profileData));
+
     return profile;
+  }
+
+  static Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('accessToken');
+    prefs.remove('user');
   }
 }
