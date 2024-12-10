@@ -8,7 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseURL = 'http://192.168.100.35:5144';
+  static const String baseURL = 'http://192.168.43.44:5144';
   static const String apiURL = '$baseURL/api';
 
   // GET request example with token
@@ -127,45 +127,6 @@ class ApiService {
       String url = apiURL + endpoint;
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
-
-      request.headers['Authorization'] = 'Bearer $token';
-
-      request.fields.addAll(fields);
-
-      if (files != null) {
-        for (var file in files) {
-          request.files.add(file);
-        }
-      }
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      final body = json.decode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return body;
-      } else {
-        String message = body['message'] ?? 'An error occurred';
-        String error = body['error'] ?? 'Unknown error';
-        throw ResponseException(message, error, response.statusCode);
-      }
-    } catch (e) {
-      _logger.e('Error in postMultipartData: $e');
-      rethrow;
-    }
-  }
-
-  static Future<Map<String, dynamic>> putMultipartData({
-    required String endpoint,
-    required Map<String, String> fields,
-    List<http.MultipartFile>? files,
-  }) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('accessToken');
-      String url = apiURL + endpoint;
-
-      var request = http.MultipartRequest('PUT', Uri.parse(url));
 
       request.headers['Authorization'] = 'Bearer $token';
 
