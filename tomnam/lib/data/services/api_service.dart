@@ -8,7 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseURL = 'http://192.168.100.35:5144';
+  static const String baseURL = 'http://192.168.43.44:5144';
   static const String apiURL = '$baseURL/api';
 
   // GET request example with token
@@ -39,9 +39,8 @@ class ApiService {
 
   // POST request example with token
   static Future<Map<String, dynamic>> postData(
-    String endpoint, Map<String, dynamic> data) async {
+      String endpoint, Map<String, dynamic> data) async {
     try {
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
 
@@ -64,9 +63,9 @@ class ApiService {
         String message = body['message'];
 
         String error;
-        if (body['error'] is List<dynamic>){
+        if (body['error'] is List<dynamic>) {
           error = (body['error'] as List).join(" ");
-        }else{
+        } else {
           error = body['error'];
         }
 
@@ -82,7 +81,7 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> putData(
-    String endpoint, Map<String, dynamic> data) async {
+      String endpoint, Map<String, dynamic> data) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('accessToken'); // Retrieve token
