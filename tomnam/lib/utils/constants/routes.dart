@@ -12,3 +12,6 @@ const addToCartRoute = '/add-to-cart/';
 const mainPageRoute = '/main_page';
 const behaviorScoreClickedRoute = '/behavior_score/';
 const editKarenderyaDisplayRoute = '/edit_karenderya_display/';
+const addFoodRoute = '/add_food/';
+const editFoodRoute = '/edit_food/';
+const editKarenderyaDetailsRoute = '/edit_karenderya_details/';
