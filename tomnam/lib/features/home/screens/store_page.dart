@@ -169,7 +169,7 @@ class _StorePageState extends State<StorePage> {
               color: AppColors.whiteColor,
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 21),
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -201,7 +201,7 @@ class _StorePageState extends State<StorePage> {
             // About Section
             const SizedBox(height: 10),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Text(
                 store.description ?? '',
                 style: const TextStyle(
