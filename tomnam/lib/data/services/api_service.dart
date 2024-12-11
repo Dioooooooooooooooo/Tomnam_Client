@@ -156,7 +156,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>> putMultipartData({
     required String endpoint,
-    required Map<String, String> fields,
+    required Map<String, String>? fields,
     List<http.MultipartFile>? files,
   }) async {
     try {
@@ -168,7 +168,7 @@ class ApiService {
 
       request.headers['Authorization'] = 'Bearer $token';
 
-      request.fields.addAll(fields);
+      request.fields.addAll(fields!);
 
       if (files != null) {
         for (var file in files) {
@@ -189,6 +189,46 @@ class ApiService {
       }
     } catch (e) {
       _logger.e('Error in postMultipartData: $e');
+      rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>> deleteData(String endpoint) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('accessToken'); // Retrieve token
+
+      String url = apiURL + endpoint;
+
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final body = json.decode(response.body);
+      _logger.d(body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return body;
+      } else {
+        String message = body['message'];
+
+        String error;
+        if (body['error'] is List<dynamic>) {
+          error = (body['error'] as List).join(" ");
+        } else {
+          error = body['error'];
+        }
+
+        _logger.e(message);
+        _logger.e(error);
+        throw ResponseException(message, error, response.statusCode);
+      }
+    } catch (e, stackTrace) {
+      _logger.e(stackTrace);
+      _logger.e('Error in delete: $e');
       rethrow;
     }
   }

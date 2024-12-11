@@ -93,4 +93,13 @@ class FoodsController {
 
     return response['message'];
   }
+
+  static Future<String> delete(String foodId) async {
+    final response = await ApiService.deleteData(
+      "/karenderyas/foods/$foodId/delete",
+    );
+
+    _logger.d(response['message']);
+    return response['message'];
+  }
 }

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:tomnam/commons/widgets/food_list_edit_item.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
@@ -25,6 +28,45 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
   late Karenderya _karenderya;
   late List<Food> _food;
   bool _isLoading = true;
+
+  final _formKey = GlobalKey<FormState>();
+  final _karenderyaNameController = TextEditingController();
+  final _karenderyaStreetController = TextEditingController();
+  final _karenderyaBarangayController = TextEditingController();
+  final _karenderyaCityController = TextEditingController();
+  final _karenderyaProvinceController = TextEditingController();
+  final _karenderyaDescriptionController = TextEditingController();
+  File? _logo;
+  File? _cover;
+  bool _uploadedLogoPhoto = false;
+  bool _uploadedCoverPhoto = false;
+
+  // Initialize ImagePicker
+  final ImagePicker _picker = ImagePicker();
+
+  // Function to pick a cover image from gallery or camera
+  Future<void> _updateCoverImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _cover = File(pickedFile.path); // Save picked image
+        _uploadedCoverPhoto = true;
+      });
+    }
+  }
+
+  // Function to pick a logo image from gallery or camera
+  Future<void> _updateLogoImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _logo = File(pickedFile.path); // Save picked image
+        _uploadedLogoPhoto = true;
+      });
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -75,106 +117,112 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                     CircularProgressIndicator()) // Show loader while fetching
             : ListView(
                 children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Banner Image
-                      Container(
-                        height: 201,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: _karenderya.logoPhoto != null
-                                ? NetworkImage(
-                                    '${ApiService.baseURL}/${_karenderya.coverPhoto}')
-                                : const AssetImage(
-                                        'assets/images/placeholder_cover.webp')
-                                    as ImageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(24),
-                            bottomRight: Radius.circular(24),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: _pressedAddFood,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Banner Image
+                        Container(
+                          height: 201,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: _karenderya.logoPhoto != null
+                                  ? NetworkImage(
+                                      '${ApiService.baseURL}/${_karenderya.coverPhoto}')
+                                  : const AssetImage(
+                                          'assets/images/placeholder_cover.webp')
+                                      as ImageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(24),
+                              bottomRight: Radius.circular(24),
+                            ),
                           ),
                         ),
-                      ),
 
-                      // Profile Section
-                      Positioned(
-                        bottom:
-                            -43.5, // Adjust to overlap by half the profile size
-                        left: 0,
-                        right: 0,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                width: 87,
-                                height: 87,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0x4CFFC529),
-                                      blurRadius: 36.23,
-                                      offset: Offset(0, 13.58),
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: Container(
-                                    width: 69,
-                                    height: 69,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: _karenderya.logoPhoto != null
-                                            ? NetworkImage(
-                                                '${ApiService.baseURL}/${_karenderya.logoPhoto}')
-                                            : const AssetImage(
-                                                    'assets/images/placeholder_logo.png')
-                                                as ImageProvider,
-                                        fit: BoxFit.cover,
+                        // Profile Section
+                        Positioned(
+                          bottom:
+                              -43.5, // Adjust to overlap by half the profile size
+                          left: 0,
+                          right: 0,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: 87,
+                                  height: 87,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x4CFFC529),
+                                        blurRadius: 36.23,
+                                        offset: Offset(0, 13.58),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: 69,
+                                      height: 69,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: _karenderya.logoPhoto != null
+                                              ? NetworkImage(
+                                                  '${ApiService.baseURL}/${_karenderya.logoPhoto}')
+                                              : const AssetImage(
+                                                      'assets/images/placeholder_logo.png')
+                                                  as ImageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
 
-                            // Upload Cover Button
-                            // Positioned(
-                            //     right: MediaQuery.of(context).size.width * 0.35,
-                            //     top: 40,
-                            //     child: IconButton(
-                            //       icon: const Icon(Icons.camera_alt_sharp,
-                            //           size: 18, color: Colors.black54),
-                            //       onPressed:
-                            //           () {}, // Supposed to be upload an image file
-                            //       style: const ButtonStyle(
-                            //           padding:
-                            //               WidgetStatePropertyAll(EdgeInsets.all(2.0)),
-                            //           backgroundColor: WidgetStatePropertyAll(
-                            //               AppColors.whiteColor),
-                            //           shadowColor:
-                            //               WidgetStatePropertyAll(Colors.black)),
-                            //     )),
+                              // Upload Logo Button
+                              Positioned(
+                                  right:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  top: 40,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.camera_alt_sharp,
+                                        size: 24, color: Colors.black54),
+                                    onPressed: () {
+                                      _logger.d('pressed');
+                                    }, // Supposed to be upload an image file
+                                    style: const ButtonStyle(
+                                        padding: WidgetStatePropertyAll(
+                                            EdgeInsets.all(2.0)),
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            AppColors.whiteColor),
+                                        shadowColor: WidgetStatePropertyAll(
+                                            Colors.black)),
+                                  )),
 
-                            // Store Edit Button
-                            Positioned(
-                              top: 45,
-                              right: MediaQuery.of(context).size.width * 0.01,
-                              child: IconButton(
-                                  iconSize: 30.0,
-                                  icon: const Icon(Icons.edit_outlined),
-                                  onPressed: () {}),
-                            ),
-                          ],
+                              // Store Edit Button
+                              Positioned(
+                                top: 45,
+                                right: MediaQuery.of(context).size.width * 0.01,
+                                child: IconButton(
+                                    iconSize: 30.0,
+                                    icon: const Icon(Icons.edit_outlined),
+                                    onPressed: () {}),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   // Store Description Section

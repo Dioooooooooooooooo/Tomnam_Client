@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -8,7 +7,6 @@ import 'package:tomnam/commons/widgets/upper_navbar.dart';
 import 'package:tomnam/data/services/api_service.dart';
 import 'package:tomnam/features/controllers/foods_controller.dart';
 import 'package:tomnam/models/food.dart';
-import 'package:tomnam/models/karenderya.dart';
 
 class ProfileFoodPage extends StatefulWidget {
   const ProfileFoodPage({super.key});
@@ -183,6 +181,30 @@ class _ProfileFoodPageState extends State<ProfileFoodPage> {
     }
   }
 
+  // Delete Food
+  void _handleDeleteFood() async {
+    try {
+      final message = await FoodsController.delete(_food!.Id);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e, stackTrace) {
+      if (!context.mounted) return;
+      String? message;
+      if (e is ResponseException) {
+        message = e.error;
+      } else {
+        message = 'An error occurred during food deletion';
+      }
+      _logger.d(stackTrace);
+      _logger.e('An error occurred during food deletion: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -260,40 +282,91 @@ class _ProfileFoodPageState extends State<ProfileFoodPage> {
                                   fit: BoxFit.cover),
                             ),
                           ),
-                          ElevatedButton.icon(
-                            onPressed: _pickImage,
-                            label: const Text('Upload Food Image'),
-                            icon: const Icon(Icons.add_a_photo),
-                            style: const ButtonStyle(
-                                padding:
-                                    WidgetStatePropertyAll(EdgeInsets.all(15))),
-                            iconAlignment: IconAlignment.start,
-                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: ElevatedButton.icon(
+                                  onPressed: _pickImage,
+                                  label: const Text('Upload Food Image'),
+                                  icon: const Icon(Icons.add_a_photo),
+                                  style: const ButtonStyle(
+                                      padding: WidgetStatePropertyAll(
+                                          EdgeInsets.all(15))),
+                                  iconAlignment: IconAlignment.start,
+                                ),
+                              ),
+                              // const SizedBox(height: 10),
+                              // SizedBox(
+                              //   width: MediaQuery.of(context).size.width * 0.5,
+                              //   child: ElevatedButton.icon(
+                              //     onPressed: _pickImage,
+                              //     label: const Text('Delete Food'),
+                              //     icon: const Icon(Icons.delete_outline),
+                              //     style: const ButtonStyle(
+                              //       padding: WidgetStatePropertyAll(
+                              //           EdgeInsets.all(15)),
+                              //       backgroundColor: WidgetStatePropertyAll(
+                              //           Colors.redAccent),
+                              //     ),
+                              //     iconAlignment: IconAlignment.start,
+                              //   ),
+                              // )
+                            ],
+                          )
                         ],
                       ),
                       const SizedBox(height: 15),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: _isUpdating
-                              ? _handleUpdateFood
-                              : _handleCreateFood,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFFA62B),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                      Row(
+                        mainAxisAlignment: _isUpdating
+                            ? MainAxisAlignment.spaceBetween
+                            : MainAxisAlignment.center,
+                        children: [
+                          _isUpdating
+                              ? SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: ElevatedButton.icon(
+                                    onPressed: _handleDeleteFood,
+                                    label: const Text('Delete Food'),
+                                    icon: const Icon(Icons.delete_outline),
+                                    style: const ButtonStyle(
+                                      padding: WidgetStatePropertyAll(
+                                          EdgeInsets.all(15)),
+                                      backgroundColor: WidgetStatePropertyAll(
+                                          Colors.redAccent),
+                                    ),
+                                    iconAlignment: IconAlignment.start,
+                                  ),
+                                )
+                              : const SizedBox(),
+                          SizedBox(
+                            // width: double.infinity,
+                            width: MediaQuery.of(context).size.width *
+                                (_isUpdating ? 0.4 : 0.85),
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: _isUpdating
+                                  ? _handleUpdateFood
+                                  : _handleCreateFood,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFFA62B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Text(
+                                _isUpdating ? 'UPDATE FOOD' : 'ADD FOOD',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                          child: Text(
-                            _isUpdating ? 'UPDATE FOOD' : 'ADD FOOD',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
