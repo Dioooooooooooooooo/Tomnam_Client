@@ -15,7 +15,7 @@ class KarenderyaDisplay extends StatelessWidget {
           context,
           editKarenderyaDisplayRoute,
           arguments: {
-            'karenderya': karenderya,
+            'karenderyaId': karenderya!.Id,
           },
         );
       },

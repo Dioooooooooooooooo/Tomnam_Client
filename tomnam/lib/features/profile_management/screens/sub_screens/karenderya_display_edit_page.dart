@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
 import 'package:tomnam/commons/widgets/food_list_edit_item.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
 import 'package:tomnam/data/services/api_service.dart';
 import 'package:tomnam/features/controllers/foods_controller.dart';
+import 'package:tomnam/features/controllers/karenderyas_controller.dart';
 import 'package:tomnam/models/food.dart';
 import 'package:tomnam/models/karenderya.dart';
 import 'package:tomnam/utils/constants/routes.dart';
@@ -25,7 +27,8 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
     printer: PrettyPrinter(),
   );
 
-  late Karenderya _karenderya;
+  late String _karenderyaId;
+  Karenderya? _karenderya;
   late List<Food> _food;
   bool _isLoading = true;
 
@@ -53,6 +56,73 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
         _cover = File(pickedFile.path); // Save picked image
         _uploadedCoverPhoto = true;
       });
+
+      _updateKarenderya(null, null, null, null, null, null, null, _cover);
+    }
+  }
+
+  // updATE
+  Future<void> _updateKarenderya(
+    String? karenderyaName,
+    String? locationStreet,
+    String? locationBarangay,
+    String? locationCity,
+    String? locationProvince,
+    String? description,
+    File? logoPhoto,
+    File? coverPhoto,
+  ) async {
+    try {
+      final message = await KarenderyasController.update(
+          _karenderyaId,
+          karenderyaName, // karenderyaName
+          locationStreet, // locationStreet,
+          locationBarangay, // locationBarangay,
+          locationCity, // locationCity,
+          locationProvince, // locationProvince,
+          description, // description,
+          logoPhoto, // logoPhoto,
+          coverPhoto //coverPhoto
+          );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e, stackTrace) {
+      if (!context.mounted) return;
+      String? message;
+      if (e is ResponseException) {
+        message = e.error;
+      } else {
+        message = 'An error occurred during karenderya update';
+      }
+      _logger.d(stackTrace);
+      _logger.e('An error occurred during karenderya update: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
+  Future<void> _fetchKarenderya() async {
+    try {
+      final karenderya = await KarenderyasController.read(
+          _karenderyaId,
+          null, // karenderyaName
+          null, // locationStreet
+          null, // locationBarangay
+          null, // locationCity
+          null // locationProvince
+          );
+      _logger.d('Karenderya: $karenderya');
+      setState(() {
+        _karenderya = karenderya[0];
+        _fetchFood();
+      });
+    } catch (e) {
+      _logger.e('Error fetching Karenderya: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -65,6 +135,8 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
         _logo = File(pickedFile.path); // Save picked image
         _uploadedLogoPhoto = true;
       });
+
+      _updateKarenderya(null, null, null, null, null, null, _logo, null);
     }
   }
 
@@ -75,9 +147,9 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
     // Fetch route arguments
     final arguments = ModalRoute.of(context)?.settings.arguments;
     if (arguments != null && arguments is Map<String, dynamic>) {
-      _karenderya = arguments['karenderya'] as Karenderya;
+      _karenderyaId = arguments['karenderyaId'] as String;
+      _fetchKarenderya();
       _logger.d('Received store data: $_karenderya');
-      _fetchFood();
     } else {
       _logger.e('No user data found in arguments');
     }
@@ -85,7 +157,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
 
   Future<void> _pressedAddFood() async {
     Navigator.pushNamed(context, addFoodRoute,
-        arguments: {'karenderyaName': _karenderya.name, 'isUpdating': false});
+        arguments: {'karenderyaName': _karenderya!.name, 'isUpdating': false});
   }
 
   Future<void> _fetchFood() async {
@@ -93,7 +165,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
       final foods = await FoodsController.read(
           null, // foodId
           null, // foodName
-          _karenderya.Id);
+          _karenderya!.Id);
       _logger.d('Foods: $foods');
       setState(() {
         _food = foods;
@@ -117,112 +189,105 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                     CircularProgressIndicator()) // Show loader while fetching
             : ListView(
                 children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: _pressedAddFood,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // Banner Image
-                        Container(
-                          height: 201,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: _karenderya.logoPhoto != null
-                                  ? NetworkImage(
-                                      '${ApiService.baseURL}/${_karenderya.coverPhoto}')
-                                  : const AssetImage(
-                                          'assets/images/placeholder_cover.webp')
-                                      as ImageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(24),
-                              bottomRight: Radius.circular(24),
-                            ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Banner Image
+                      Container(
+                        height: 201,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            // Cover Photo
+                            image: _karenderya!.coverPhoto != null &&
+                                    !_uploadedCoverPhoto
+                                ? NetworkImage(
+                                    '${ApiService.baseURL}/${_karenderya!.coverPhoto}')
+                                : _uploadedCoverPhoto
+                                    ? FileImage(_cover!)
+                                    : const AssetImage(
+                                            'assets/images/placeholder_cover.webp')
+                                        as ImageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
                           ),
                         ),
+                      ),
 
-                        // Profile Section
-                        Positioned(
-                          bottom:
-                              -43.5, // Adjust to overlap by half the profile size
-                          left: 0,
-                          right: 0,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  width: 87,
-                                  height: 87,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0x4CFFC529),
-                                        blurRadius: 36.23,
-                                        offset: Offset(0, 13.58),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Container(
-                                      width: 69,
-                                      height: 69,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: _karenderya.logoPhoto != null
-                                              ? NetworkImage(
-                                                  '${ApiService.baseURL}/${_karenderya.logoPhoto}')
-                                              : const AssetImage(
-                                                      'assets/images/placeholder_logo.png')
-                                                  as ImageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
+                      // Profile Section
+                      Positioned(
+                        bottom:
+                            -43.5, // Adjust to overlap by half the profile size
+                        left: 0,
+                        right: 0,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 87,
+                                height: 87,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x4CFFC529),
+                                      blurRadius: 36.23,
+                                      offset: Offset(0, 13.58),
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Container(
+                                    width: 69,
+                                    height: 69,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        // Logo Photo
+                                        image: _karenderya!.logoPhoto != null &&
+                                                !_uploadedLogoPhoto
+                                            ? NetworkImage(
+                                                '${ApiService.baseURL}/${_karenderya!.logoPhoto}')
+                                            : _uploadedLogoPhoto
+                                                ? FileImage(_logo!)
+                                                : const AssetImage(
+                                                        'assets/images/placeholder_logo.png')
+                                                    as ImageProvider,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
 
-                              // Upload Logo Button
-                              Positioned(
-                                  right:
-                                      MediaQuery.of(context).size.width * 0.35,
-                                  top: 40,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.camera_alt_sharp,
-                                        size: 24, color: Colors.black54),
-                                    onPressed: () {
-                                      _logger.d('pressed');
-                                    }, // Supposed to be upload an image file
-                                    style: const ButtonStyle(
-                                        padding: WidgetStatePropertyAll(
-                                            EdgeInsets.all(2.0)),
-                                        backgroundColor: WidgetStatePropertyAll(
-                                            AppColors.whiteColor),
-                                        shadowColor: WidgetStatePropertyAll(
-                                            Colors.black)),
-                                  )),
-
-                              // Store Edit Button
-                              Positioned(
-                                top: 45,
-                                right: MediaQuery.of(context).size.width * 0.01,
-                                child: IconButton(
-                                    iconSize: 30.0,
-                                    icon: const Icon(Icons.edit_outlined),
-                                    onPressed: () {}),
-                              ),
-                            ],
-                          ),
+                            // // Upload Logo Button
+                            // Positioned(
+                            //     right: MediaQuery.of(context).size.width * 0.35,
+                            //     top: 40,
+                            //     child: IconButton(
+                            //       icon: const Icon(Icons.camera_alt_sharp,
+                            //           size: 24, color: Colors.black54),
+                            //       onPressed: () {
+                            //         _logger.d('pressed');
+                            //       }, // Supposed to be upload an image file
+                            //       style: const ButtonStyle(
+                            //           padding: WidgetStatePropertyAll(
+                            //               EdgeInsets.all(2.0)),
+                            //           backgroundColor: WidgetStatePropertyAll(
+                            //               AppColors.whiteColor),
+                            //           shadowColor:
+                            //               WidgetStatePropertyAll(Colors.black)),
+                            //     )),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
 
                   // Store Description Section
@@ -234,7 +299,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            _karenderya.name,
+                            _karenderya!.name,
                             style: const TextStyle(
                               color: Color(0xFF272827),
                               fontSize: 26,
@@ -250,7 +315,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                                   color: AppColors.mainGreenColor, size: 15),
                               const SizedBox(width: 10),
                               Text(
-                                '${_karenderya.locationStreet}, ${_karenderya.locationBarangay}, ${_karenderya.locationCity}, ${_karenderya.locationProvince}',
+                                '${_karenderya!.locationStreet}, ${_karenderya!.locationBarangay}, ${_karenderya!.locationCity}, ${_karenderya!.locationProvince}',
                                 style: const TextStyle(
                                   color: Color.fromARGB(255, 87, 87, 87),
                                   fontSize: 14,
@@ -267,23 +332,58 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
 
                   // About Section
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
-                      _karenderya.description ?? '',
-                      style: const TextStyle(
-                        color: Color(0xFF272827),
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w400,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30),
+                        child: Text(
+                          'About',
+                          style: TextStyle(
+                            color: Color(0xFF272827),
+                            fontSize: 18,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Text(
+                          _karenderya!.description ?? 'No description yet.',
+                          style: const TextStyle(
+                            color: Color(0xFF272827),
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   // Divider
                   Container(
                     height: 0.5,
                     color: AppColors.grayColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        TextButton(
+                            onPressed: _updateCoverImage,
+                            child: const Text(
+                              'Update Cover',
+                            )),
+                        TextButton(
+                            onPressed: _updateLogoImage,
+                            child: const Text(
+                              'Update Logo',
+                            ))
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   // Food List
@@ -302,7 +402,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                             itemCount: _food.length,
                             itemBuilder: (context, index) {
                               return FoodListEditItem(
-                                  _food[index], _karenderya.name);
+                                  _food[index], _karenderya!.name);
                             },
                           ),
                         ),

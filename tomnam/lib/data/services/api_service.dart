@@ -168,7 +168,9 @@ class ApiService {
 
       request.headers['Authorization'] = 'Bearer $token';
 
-      request.fields.addAll(fields!);
+      if (fields != null) {
+        request.fields.addAll(fields);
+      }
 
       if (files != null) {
         for (var file in files) {

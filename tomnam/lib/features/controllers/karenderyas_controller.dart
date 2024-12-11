@@ -36,6 +36,7 @@ class KarenderyasController {
       if (response['data'] == null) {
         return [];
       }
+
       final data = response['data'] as List;
       _logger.d("Data: $data");
       return data
@@ -105,12 +106,15 @@ class KarenderyasController {
     var response;
 
     if (coverPhoto != null) {
+      _logger.d('updating cover photo');
       response = await ApiService.putMultipartData(
           endpoint: url, fields: null, files: [coverFile]);
     } else if (logoPhoto != null) {
+      _logger.d('updating logo photo');
       response = await ApiService.putMultipartData(
           endpoint: url, fields: null, files: [logoFile]);
     } else {
+      _logger.d('updating karenderya');
       response = await ApiService.putData(url, bodyFields);
     }
 

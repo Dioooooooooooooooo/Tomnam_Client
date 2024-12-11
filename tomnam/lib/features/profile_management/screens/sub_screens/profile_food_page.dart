@@ -34,6 +34,7 @@ class _ProfileFoodPageState extends State<ProfileFoodPage> {
   bool _isLoading = true;
   bool _isUpdating = false;
   bool _uploadedPhoto = false;
+  bool _fetchedArguments = false;
 
   @override
   void didChangeDependencies() {
@@ -46,7 +47,7 @@ class _ProfileFoodPageState extends State<ProfileFoodPage> {
       _isUpdating = arguments['isUpdating'] as bool;
       _logger.d('Received store data: $_karenderyaName');
 
-      if (_isUpdating) {
+      if (_isUpdating && !_fetchedArguments) {
         _food = arguments['food'] as Food;
         _logger.d('Received food data: $_food');
         final foodPhotoPath = _food!.foodPhoto;
@@ -60,6 +61,8 @@ class _ProfileFoodPageState extends State<ProfileFoodPage> {
     } else {
       _logger.e('No karenderya data found in arguments');
     }
+
+    _fetchedArguments = true;
   }
 
   @override
