@@ -8,7 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseURL = 'http://10.10.111.158:5144';
+  static const String baseURL = 'http://:5144';
   static const String apiURL = '$baseURL/api';
 
   // GET request example with token
