@@ -8,8 +8,9 @@ import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
 import 'package:tomnam/features/reserve/screens/add_to_cart_page.dart';
 import 'package:tomnam/features/reserve/screens/checkout_page.dart';
 import 'package:tomnam/features/reserve/screens/reserve_food_page.dart';
-import 'package:tomnam/features/profile_management/screens/behavior_score_page.dart';
-import 'package:tomnam/features/profile_management/screens/karenderya_display_edit_page.dart';
+import 'package:tomnam/features/profile_management/screens/sub_screens/profile_food_page.dart';
+import 'package:tomnam/features/profile_management/screens/sub_screens/behavior_score_page.dart';
+import 'package:tomnam/features/profile_management/screens/sub_screens/karenderya_display_edit_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
@@ -65,6 +66,8 @@ class MyApp extends StatelessWidget {
         behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),
         editKarenderyaDisplayRoute: (context) =>
             const KarenderyaDisplayEditPage(),
+        addFoodRoute: (context) => const ProfileFoodPage(),
+        editFoodRoute: (context) => const ProfileFoodPage(),
       },
     );
   }
