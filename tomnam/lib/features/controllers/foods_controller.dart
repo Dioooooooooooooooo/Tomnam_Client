@@ -14,9 +14,9 @@ class FoodsController {
     final params = <String, String>{};
     String url = "/karenderyas/foods";
 
-    if (foodId != null) params['foodId'] = foodId!;
-    if (foodName != null) params['foodName'] = foodName!;
-    if (karenderyaId != null) params['KarenderyaId'] = karenderyaId!;
+    if (foodId != null) params['foodId'] = foodId;
+    if (foodName != null) params['foodName'] = foodName;
+    if (karenderyaId != null) params['KarenderyaId'] = karenderyaId;
 
     if (params.isNotEmpty) {
       url += '?${params.entries.map((e) => '${e.key}=${e.value}').join('&')}';

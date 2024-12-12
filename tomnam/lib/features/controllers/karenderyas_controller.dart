@@ -16,14 +16,14 @@ class KarenderyasController {
       String? locationProvince) async {
     final params = <String, String>{};
 
-    if (karenderyaId != null) params['karenderyaId'] = karenderyaId!;
-    if (karenderyaName != null) params['Name'] = karenderyaName!;
-    if (locationStreet != null) params['locationStreet'] = locationStreet!;
+    if (karenderyaId != null) params['karenderyaId'] = karenderyaId;
+    if (karenderyaName != null) params['Name'] = karenderyaName;
+    if (locationStreet != null) params['locationStreet'] = locationStreet;
     if (locationBarangay != null)
-      params['locationBarangay'] = locationBarangay!;
-    if (locationCity != null) params['locationCity'] = locationCity!;
+      params['locationBarangay'] = locationBarangay;
+    if (locationCity != null) params['locationCity'] = locationCity;
     if (locationProvince != null)
-      params['locationProvince'] = locationProvince!;
+      params['locationProvince'] = locationProvince;
     String url = "/karenderyas";
 
     if (params.isNotEmpty) {
