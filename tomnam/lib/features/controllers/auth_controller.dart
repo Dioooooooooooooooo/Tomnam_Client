@@ -12,6 +12,7 @@ class AuthController {
     final response = await ApiService.postData("/auth/register", registerData);
 
     final data = response['data'];
+    _logger.d(data);
     _logger.d('Registration successful: $data');
 
     SharedPreferences prefs = await SharedPreferences.getInstance();

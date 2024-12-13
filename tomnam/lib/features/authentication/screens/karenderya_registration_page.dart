@@ -10,6 +10,10 @@ class KarenderyaRegistrationPage extends StatefulWidget {
       _KarenderyaRegistrationPageState();
 }
 
+void _karenderyaSignup() async {
+  // Navigator.of().popAndPushNamed(proofOfBusinessRoute);
+}
+
 class _KarenderyaRegistrationPageState
     extends State<KarenderyaRegistrationPage> {
   @override
@@ -69,8 +73,7 @@ class _KarenderyaRegistrationPageState
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    // onPressed: Navigator.of(context).popAndPushNamed(proofOfBusinessRoute);
-                    onPressed: null,
+                    onPressed: _karenderyaSignup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFFA62B),
                       shape: RoundedRectangleBorder(
