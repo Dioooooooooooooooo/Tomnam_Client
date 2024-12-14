@@ -1,65 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tomnam/Exceptions/response_exception.dart';
-import 'package:tomnam/features/controllers/auth_controller.dart';
+import 'package:tomnam/utils/constants/routes.dart';
+import '../../../Exceptions/response_exception.dart';
+import '../../controllers/karenderyas_controller.dart';
 
-import '../../../utils/constants/routes.dart';
-
-class OwnerRegistrationPage extends StatefulWidget {
-  const OwnerRegistrationPage({super.key});
+class KarenderyaRegistrationPage extends StatefulWidget {
+  const KarenderyaRegistrationPage({super.key});
 
   @override
-  State<OwnerRegistrationPage> createState() => _OwnerRegistrationPageState();
+  State<KarenderyaRegistrationPage> createState() =>
+      _KarenderyaRegistrationPageState();
 }
 
-class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
-  final _authController = AuthController();
+class _KarenderyaRegistrationPageState
+    extends State<KarenderyaRegistrationPage> {
   final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _karenderyaNameController = TextEditingController();
+  final _karenderyaStreetController = TextEditingController();
+  final _karenderyaBarangayController = TextEditingController();
+  final _karenderyaCityController = TextEditingController();
+  final _karenderyaProvinceController = TextEditingController();
+  final _karenderyaDateFoundedController = TextEditingController();
+  final _karenderyaDescriptionController = TextEditingController();
   final _logger = Logger();
 
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  void _handleSignUp() async {
+  void _karenderyaSignup(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final firstName = _firstNameController.text.trim();
-      final lastname = _lastNameController.text.trim();
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-      final confirmPassword = _confirmPasswordController.text.trim();
-
-      if (password != confirmPassword) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Passwords do not match')),
-        );
-        return;
-      }
+      final name = _karenderyaNameController.text.trim();
+      final city = _karenderyaCityController.text.trim();
+      final street = _karenderyaStreetController.text.trim();
+      final barangay = _karenderyaBarangayController.text.trim();
+      final province = _karenderyaProvinceController.text.trim();
+      final dateFounded = _karenderyaDateFoundedController.text.trim();
+      final description = _karenderyaDescriptionController.text.trim();
 
       try {
-        final message = await _authController.register({
-          'FirstName': firstName,
-          'LastName': lastname,
-          'Email': email,
-          'Password': password,
-          'ConfirmPassword': confirmPassword,
-          'UserRole': 'Owner',
+        final Karenderya = await KarenderyasController.create({
+          "Name": name,
+          "LocationCity": city,
+          "LocationStreet": street,
+          "LocationBarangay": barangay,
+          "LocationProvince": province,
+          "DateFounded": dateFounded,
+          "Description": description,
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
+          const SnackBar(content: Text("Karenderya Created Successfully")),
         );
-        Navigator.of(context).popAndPushNamed(karenderyaRegisterRoute);
+
+        Navigator.of(context).popAndPushNamed(proofOfBusinessRoute,
+            arguments: {"Karenderya": Karenderya});
       } catch (e, stackTrace) {
         if (!context.mounted) return;
         String? message;
@@ -97,7 +87,7 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Create Account',
+                  'Karenderya Details',
                   style: TextStyle(
                     color: Color(0xFF006A60),
                     fontSize: 32,
@@ -106,43 +96,53 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
                 ),
                 const SizedBox(height: 32),
                 _buildTextField(
-                  controller: _firstNameController,
-                  label: 'First Name',
+                  controller: _karenderyaNameController,
+                  label: 'Karenderya Name',
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  controller: _lastNameController,
-                  label: 'Last Name',
+                  controller: _karenderyaBarangayController,
+                  label: 'Barangay',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaCityController,
+                  label: 'City',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaProvinceController,
+                  label: 'Province',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaStreetController,
+                  label: 'Street',
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  controller: _emailController,
-                  label: 'Email',
+                  controller: _karenderyaDateFoundedController,
+                  label: 'Date Founded',
                   icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.datetime,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  controller: _passwordController,
-                  label: 'Password',
+                  controller: _karenderyaDescriptionController,
+                  label: 'Description',
                   icon: Icons.key_outlined,
-                  isPassword: true,
-                ),
-                const SizedBox(height: 16),
-                _buildTextField(
-                  controller: _confirmPasswordController,
-                  label: 'Confirm Password',
-                  icon: Icons.key_outlined,
-                  isPassword: true,
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _handleSignUp,
+                    onPressed: () => _karenderyaSignup(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFFA62B),
                       shape: RoundedRectangleBorder(
@@ -150,7 +150,7 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
                       ),
                     ),
                     child: const Text(
-                      'SIGN UP',
+                      'NEXT',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
