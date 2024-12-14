@@ -8,7 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseUrl = 'http://192.168.254.104:5144/api';
+  static const String baseUrl = 'http://192.168.101.54:5144/api';
 
   // GET request example with token
   static Future<Map<String, dynamic>> getData(String endpoint) async {

@@ -10,3 +10,5 @@ const profilePageRoute = '/profile_page/';
 const searchPageRoute = '/search_page/';
 const addToCartRoute = '/add-to-cart/';
 const mainPageRoute = '/main_page';
+const generateQrCodePageRoute = '/generate';
+const scanQrCodePageRoute = '/scan';

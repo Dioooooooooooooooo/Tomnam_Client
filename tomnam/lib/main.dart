@@ -5,11 +5,13 @@ import 'package:tomnam/features/authentication/screens/owner_registration_page.d
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
 import 'package:tomnam/features/reserve/add_to_cart_page.dart';
+import 'package:tomnam/features/reserve/generate_code_page.dart';
 import 'package:tomnam/features/reserve/reserve_food_page.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
+import 'package:tomnam/features/reserve/scan_code_page.dart';
 import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/welcome_page.dart';
 import '/utils/constants/routes.dart';
@@ -43,6 +45,8 @@ class MyApp extends StatelessWidget {
         addToCartRoute: (context) => const AddToCartPage(),
         searchPageRoute: (context) => const SearchPage(),
         mainPageRoute: (context) => const MainPage(),
+        generateQrCodePageRoute: (context) => const GenerateCodePage(),
+        scanQrCodePageRoute: (context) => const ScanCodePage(),
       },
     );
   }
