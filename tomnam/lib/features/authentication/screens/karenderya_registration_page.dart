@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tomnam/utils/constants/routes.dart';
-import '../../../commons/widgets/register_inputfield_widget.dart';
+import '../../../Exceptions/response_exception.dart';
+import '../../controllers/karenderyas_controller.dart';
 
 class KarenderyaRegistrationPage extends StatefulWidget {
   const KarenderyaRegistrationPage({super.key});
@@ -10,12 +12,61 @@ class KarenderyaRegistrationPage extends StatefulWidget {
       _KarenderyaRegistrationPageState();
 }
 
-void _karenderyaSignup() async {
-  // Navigator.of().popAndPushNamed(proofOfBusinessRoute);
-}
-
 class _KarenderyaRegistrationPageState
     extends State<KarenderyaRegistrationPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _karenderyaNameController = TextEditingController();
+  final _karenderyaStreetController = TextEditingController();
+  final _karenderyaBarangayController = TextEditingController();
+  final _karenderyaCityController = TextEditingController();
+  final _karenderyaProvinceController = TextEditingController();
+  final _karenderyaDateFoundedController = TextEditingController();
+  final _karenderyaDescriptionController = TextEditingController();
+  final _logger = Logger();
+
+  void _karenderyaSignup(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final name = _karenderyaNameController.text.trim();
+      final city = _karenderyaCityController.text.trim();
+      final street = _karenderyaStreetController.text.trim();
+      final barangay = _karenderyaBarangayController.text.trim();
+      final province = _karenderyaProvinceController.text.trim();
+      final dateFounded = _karenderyaDateFoundedController.text.trim();
+      final description = _karenderyaDescriptionController.text.trim();
+
+      try {
+        final Karenderya = await KarenderyasController.create({
+          "Name": name,
+          "LocationCity": city,
+          "LocationStreet": street,
+          "LocationBarangay": barangay,
+          "LocationProvince": province,
+          "DateFounded": dateFounded,
+          "Description": description,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Karenderya Created Successfully")),
+        );
+
+        Navigator.of(context).popAndPushNamed(proofOfBusinessRoute,
+            arguments: {"Karenderya": Karenderya});
+      } catch (e, stackTrace) {
+        if (!context.mounted) return;
+        String? message;
+        if (e is ResponseException) {
+          message = e.error;
+        } else {
+          message = 'An error occurred during registration';
+        }
+        _logger.d(stackTrace);
+        _logger.e('An error occurred during registration: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +74,7 @@ class _KarenderyaRegistrationPageState
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Form(
-            // key: _formKey,
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,26 +96,44 @@ class _KarenderyaRegistrationPageState
                 ),
                 const SizedBox(height: 32),
                 _buildTextField(
-                  // controller: _firstNameController,
+                  controller: _karenderyaNameController,
                   label: 'Karenderya Name',
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  // controller: _lastNameController,
-                  label: 'Location',
+                  controller: _karenderyaBarangayController,
+                  label: 'Barangay',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaCityController,
+                  label: 'City',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaProvinceController,
+                  label: 'Province',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  controller: _karenderyaStreetController,
+                  label: 'Street',
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  // controller: _emailController,
+                  controller: _karenderyaDateFoundedController,
                   label: 'Date Founded',
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.datetime,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  // controller: _passwordController,
+                  controller: _karenderyaDescriptionController,
                   label: 'Description',
                   icon: Icons.key_outlined,
                 ),
@@ -73,7 +142,7 @@ class _KarenderyaRegistrationPageState
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _karenderyaSignup,
+                    onPressed: () => _karenderyaSignup(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFFA62B),
                       shape: RoundedRectangleBorder(
@@ -99,14 +168,14 @@ class _KarenderyaRegistrationPageState
   }
 
   Widget _buildTextField({
-    // required TextEditingController controller,
+    required TextEditingController controller,
     required String label,
     required IconData icon,
     bool isPassword = false,
     TextInputType? keyboardType,
   }) {
     return TextFormField(
-      // controller: controller,
+      controller: controller,
       obscureText: isPassword,
       keyboardType: keyboardType,
       decoration: InputDecoration(

@@ -1,4 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
+import 'package:tomnam/features/controllers/proof_of_business.dart';
+import 'package:tomnam/models/karenderya.dart';
+import 'package:tomnam/utils/constants/routes.dart';
 
 class ProofOfBusinessPage extends StatefulWidget {
   const ProofOfBusinessPage({super.key});
@@ -8,6 +16,60 @@ class ProofOfBusinessPage extends StatefulWidget {
 }
 
 class _ProofOfBusinessPageState extends State<ProofOfBusinessPage> {
+  final _logger = Logger(printer: PrettyPrinter());
+  final ImagePicker _picker = ImagePicker();
+  File? _image;
+  final List<File?> _images = List<File?>.filled(4, null, growable: false);
+  late Karenderya _karenderya;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Fetch route arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null && arguments is Map<String, dynamic>) {
+      _karenderya = arguments['Karenderya'] as Karenderya;
+    }
+  }
+
+  void _handleCreateProofOfBusines() async {
+    try {
+      await ProofOfBusinessController.create(
+          _karenderya, _images[0]!, _images[1]!, _images[2]!, _images[3]!);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Proof of business created")),
+      );
+
+      Navigator.of(context).popAndPushNamed(loginRoute);
+    } catch (e, stackTrace) {
+      if (!context.mounted) return;
+      String? message;
+      if (e is ResponseException) {
+        message = e.error;
+      } else {
+        message = 'An error occurred during proof of business creation';
+      }
+      _logger.d(stackTrace);
+      _logger.e('An error occurred during  proof of business creation: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
+  Future<void> _pickImage(int index) async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path); // Save picked image
+        _images[index] = _image!; // Replace image in list
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,37 +98,83 @@ class _ProofOfBusinessPageState extends State<ProofOfBusinessPage> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                _buildTextField(
-                  // controller: _firstNameController,
-                  label: 'Karenderya Owner Valid ID 1',
-                  icon: Icons.person_outline,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      // width: MediaQuery.of(context).size.width * 0.5,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _pickImage(0),
+                        label: const Text('Karenderya Owner Valid ID 1'),
+                        icon: const Icon(Icons.add_a_photo),
+                        style: const ButtonStyle(
+                            padding:
+                                WidgetStatePropertyAll(EdgeInsets.all(12))),
+                        iconAlignment: IconAlignment.start,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-                _buildTextField(
-                  // controller: _lastNameController,
-                  label: 'Karenderya Owner Valid ID 2',
-                  icon: Icons.person_outline,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      // width: MediaQuery.of(context).size.width * 0.5,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _pickImage(1),
+                        label: const Text('Karenderya Owner Valid ID 2'),
+                        icon: const Icon(Icons.add_a_photo),
+                        style: const ButtonStyle(
+                            padding:
+                                WidgetStatePropertyAll(EdgeInsets.all(12))),
+                        iconAlignment: IconAlignment.start,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-                _buildTextField(
-                  // controller: _emailController,
-                  label: 'Mayor\'\s or Business Permit',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.datetime,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      // width: MediaQuery.of(context).size.width * 0.5,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _pickImage(2),
+                        label: const Text('Mayor\'\s or Business Permit'),
+                        icon: const Icon(Icons.add_a_photo),
+                        style: const ButtonStyle(
+                            padding:
+                                WidgetStatePropertyAll(EdgeInsets.all(12))),
+                        iconAlignment: IconAlignment.start,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-                _buildTextField(
-                  // controller: _passwordController,
-                  label: 'BIR Registration',
-                  icon: Icons.key_outlined,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      // width: MediaQuery.of(context).size.width * 0.5,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _pickImage(3),
+                        label: const Text('BIR Registration'),
+                        icon: const Icon(Icons.add_a_photo),
+                        style: const ButtonStyle(
+                            padding:
+                                WidgetStatePropertyAll(EdgeInsets.all(12))),
+                        iconAlignment: IconAlignment.start,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    // onPressed: Navigator.of(context).popAndPushNamed();
-                    onPressed: null,
+                    onPressed: _handleCreateProofOfBusines,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFFA62B),
                       shape: RoundedRectangleBorder(

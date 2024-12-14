@@ -3,6 +3,8 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/Exceptions/response_exception.dart';
 import 'package:tomnam/features/controllers/auth_controller.dart';
 
+import '../../../utils/constants/routes.dart';
+
 class OwnerRegistrationPage extends StatefulWidget {
   const OwnerRegistrationPage({super.key});
 
@@ -57,6 +59,7 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message)),
         );
+        Navigator.of(context).popAndPushNamed(karenderyaRegisterRoute);
       } catch (e, stackTrace) {
         if (!context.mounted) return;
         String? message;

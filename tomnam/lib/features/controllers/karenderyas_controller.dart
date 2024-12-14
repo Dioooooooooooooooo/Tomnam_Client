@@ -7,14 +7,22 @@ import 'package:logger/logger.dart';
 class KarenderyasController {
   static final _logger = Logger();
 
-  // static Future<Karenderya> create(
-  //     Map<String, String> karenderyaDetails) async {
-  //   final response =
-  //       await ApiService.postData("karenderyas/create", karenderyaDetails);
+  static Future<Karenderya> create(
+      Map<String, String> karenderyaDetails) async {
+    try {
+      _logger.d("Creating Karenderya: $karenderyaDetails");
+      final response =
+          await ApiService.postData("/karenderyas/create", karenderyaDetails);
 
-  //   final data = response['data'];
-  //   _logger.d(data);
-  // }
+      final data = response['data'] as Map<String, dynamic>;
+      _logger.d(data);
+      var karenderya = Karenderya.fromJson(data);
+      return karenderya;
+    } catch (e, StackTrace) {
+      _logger.e("Error creating Karenderya: $e");
+      throw Exception("Failed to create Karenderya");
+    }
+  }
 
   static Future<List<Karenderya>> read(
       String? karenderyaId,
