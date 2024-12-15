@@ -308,22 +308,18 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.location_on,
-                                  color: AppColors.mainGreenColor, size: 15),
-                              const SizedBox(width: 10),
-                              Text(
-                                '${_karenderya!.locationStreet}, ${_karenderya!.locationBarangay}, ${_karenderya!.locationCity}, ${_karenderya!.locationProvince}',
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 87, 87, 87),
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Text(
+                              '${_karenderya!.locationStreet}, ${_karenderya!.locationBarangay}, ${_karenderya!.locationCity}, ${_karenderya!.locationProvince}',
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 87, 87, 87),
+                                fontSize: 14,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
                               ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           )
                         ],
                       ),

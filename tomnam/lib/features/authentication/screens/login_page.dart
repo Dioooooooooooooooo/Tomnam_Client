@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             // Top section with background image
             Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: 300,
               width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
