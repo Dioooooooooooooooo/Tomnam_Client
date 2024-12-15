@@ -107,7 +107,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     _logger.d(combinedDateTime.toString());
     reservationData['CartItemIds'] = cartItemIds;
     reservationData['ReserveDateTime'] = combinedDateTime.toIso8601String();
-    reservationData['ModeOfPayment'] = 'COD';
+    reservationData['ModeOfPayment'] = 'Over-the-counter';
 
     try {
       final message = await ReservationController.create(reservationData);
