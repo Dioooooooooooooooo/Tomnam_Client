@@ -1,3 +1,5 @@
+import 'package:tomnam/features/reserve/screens/confirm_reservation_page.dart';
+
 const welcomeRoute = '/welcome/';
 const loginRoute = '/login/';
 const customerRegisterRoute = '/customer_register/';
@@ -20,3 +22,4 @@ const editKarenderyaDisplayRoute = '/edit_karenderya_display/';
 const addFoodRoute = '/add_food/';
 const editFoodRoute = '/edit_food/';
 const editKarenderyaDetailsRoute = '/edit_karenderya_details/';
+const confirmReservationRoute = '/confirm_reservation/';

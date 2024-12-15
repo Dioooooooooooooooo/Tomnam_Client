@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tomnam/commons/widgets/announcement_section.dart';
+import 'package:logger/logger.dart';
+import 'package:tomnam/features/controllers/profile_controller.dart';
+import 'package:tomnam/utils/constants/routes.dart';
 import '../calendar_widget.dart';
 import '../reservation_widget.dart';
 import '../../controllers/calendar_controller.dart';
@@ -17,12 +19,28 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime selectedDay = DateTime.now();
   late Future<List<Reservation>> _reservationsFuture;
   Map<DateTime, List<Reservation>> _reservationsMap = {};
-  Map<String, List<Reservation>>? reservationsByTime;
+
+  bool? _isOwner;
+  final _logger = Logger(
+    printer: PrettyPrinter(),
+  );
 
   @override
   void initState() {
     super.initState();
     _reservationsFuture = _fetchAndOrganizeReservations();
+    _fetchUser();
+  }
+
+  Future<void> _fetchUser() async {
+    try {
+      final user = await ProfileController.getUser();
+      setState(() {
+        _isOwner = user.role == 'Owner';
+      });
+    } catch (e) {
+      _logger.e('Error fetching user: $e');
+    }
   }
 
   Future<List<Reservation>> _fetchAndOrganizeReservations() async {
@@ -160,15 +178,21 @@ class _CalendarPageState extends State<CalendarPage> {
                             return ReservationWidget(
                               reservation: reservation,
                               onScanTap: () {
-                                // Navigate to QR code generation page
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => GenerateCodePage(
-                                      reservationId: reservation.id,
+                                // Navigate to QR code generation page, scammer charlene
+                                if (!_isOwner!) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => GenerateCodePage(
+                                        reservationId: reservation.id,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  // Navigate to Scanner
+                                  Navigator.pushNamed(
+                                      context, scanQrCodePageRoute);
+                                }
                               },
                             );
                           }).toList(),

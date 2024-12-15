@@ -69,9 +69,8 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                         Icons.qr_code_scanner_outlined,
                         color: Colors.white,
                       ),
-                      onPressed: () {
-                        _logger.d("qr code pressed");
-                      },
+                      onPressed: () =>
+                          Navigator.pushNamed(context, scanQrCodePageRoute),
                     ),
             ),
           ),
