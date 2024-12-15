@@ -37,8 +37,8 @@ class _GenerateCodePageState extends State<GenerateCodePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(),
-            // if (qrData != null) PrettyQrView.data(data: qrData!),
-          ], // should have a way to get the ID of the reservation and make it into qr
+            //if (qrData != null) PrettyQrView.data(data: qrData!),
+          ],
         ),
       ),
     );
