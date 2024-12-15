@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tomnam/features/authentication/screens/customer_registration_page.dart';
 import 'package:tomnam/features/authentication/screens/login_page.dart';
 import 'package:tomnam/features/authentication/screens/owner_registration_page.dart';
+import 'package:tomnam/features/authentication/screens/proof_of_business_page.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
 import 'package:tomnam/features/reserve/screens/cart_page.dart';
@@ -18,6 +19,7 @@ import 'package:tomnam/features/profile_management/screens/profile_page.dart';
 import 'package:tomnam/models/cart_item.dart';
 import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/theme/theme.dart';
+import 'features/authentication/screens/karenderya_registration_page.dart';
 import 'features/authentication/screens/welcome_page.dart';
 import '/utils/constants/routes.dart';
 import 'package:tomnam/provider/karenderya_provider.dart';
@@ -51,6 +53,9 @@ class MyApp extends StatelessWidget {
         loginRoute: (context) => const LoginPage(),
         customerRegisterRoute: (context) => const CustomerRegistrationPage(),
         ownerRegisterRoute: (context) => const OwnerRegistrationPage(),
+        karenderyaRegisterRoute: (context) =>
+            const KarenderyaRegistrationPage(),
+        proofOfBusinessRoute: (context) => const ProofOfBusinessPage(),
         homeRoute: (context) => const HomePage(),
         storeRoute: (context) => const StorePage(),
         reserveFoodRoute: (context) => const ReserveFoodPage(),

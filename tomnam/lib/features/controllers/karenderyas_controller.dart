@@ -7,6 +7,23 @@ import 'package:logger/logger.dart';
 class KarenderyasController {
   static final _logger = Logger();
 
+  static Future<Karenderya> create(
+      Map<String, String> karenderyaDetails) async {
+    try {
+      _logger.d("Creating Karenderya: $karenderyaDetails");
+      final response =
+          await ApiService.postData("/karenderyas/create", karenderyaDetails);
+
+      final data = response['data'] as Map<String, dynamic>;
+      _logger.d(data);
+      var karenderya = Karenderya.fromJson(data);
+      return karenderya;
+    } catch (e, StackTrace) {
+      _logger.e("Error creating Karenderya: $e");
+      throw Exception("Failed to create Karenderya");
+    }
+  }
+
   static Future<List<Karenderya>> read(
       String? karenderyaId,
       String? karenderyaName,
@@ -19,11 +36,9 @@ class KarenderyasController {
     if (karenderyaId != null) params['karenderyaId'] = karenderyaId;
     if (karenderyaName != null) params['Name'] = karenderyaName;
     if (locationStreet != null) params['locationStreet'] = locationStreet;
-    if (locationBarangay != null)
-      params['locationBarangay'] = locationBarangay;
+    if (locationBarangay != null) params['locationBarangay'] = locationBarangay;
     if (locationCity != null) params['locationCity'] = locationCity;
-    if (locationProvince != null)
-      params['locationProvince'] = locationProvince;
+    if (locationProvince != null) params['locationProvince'] = locationProvince;
     String url = "/karenderyas";
 
     if (params.isNotEmpty) {
