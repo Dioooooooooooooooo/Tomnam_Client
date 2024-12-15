@@ -1,67 +1,65 @@
 import 'package:flutter/material.dart';
-import 'reservation.dart'; // Import the Reservation class
-import '../../../utils/constants/tomnam_pallete.dart';
+import 'package:tomnam/models/reservation.dart';
+import 'package:intl/intl.dart';
 
 class ReservationWidget extends StatelessWidget {
   final Reservation reservation;
+  final VoidCallback? onScanTap;
 
-  const ReservationWidget({super.key, required this.reservation});
+  const ReservationWidget({
+    super.key,
+    required this.reservation,
+    this.onScanTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.accentOrangeColor,
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Karenderya Name
             Text(
-              reservation.karenderyaName,
+              reservation.karenderya.name,
               style: const TextStyle(
-                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
             ),
             const SizedBox(height: 8.0),
-            // Display each item with its quantity
-            ...reservation.items.map((item) {
-              //luh needed ning tulo ka tuldok ?? "..."
-              final itemName = item.keys.first;
-              final itemQuantity = item.values.first;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      itemName,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Text(
-                      'x$itemQuantity',
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+
+            // Reservation Details
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Date: ${DateFormat('yyyy-MM-dd HH:mm').format(reservation.reserveDateTime)}',
                 ),
-              );
-            }).toList(),
+                Text('Total: ₱${reservation.total.toStringAsFixed(2)}'),
+              ],
+            ),
+
+            // Reserved Items
             const SizedBox(height: 8.0),
-            const Text(
-              'Total: ₱120.00',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+            Text('Items:'),
+            ...reservation.reservedItems
+                .map((item) => Text(
+                    '• ${item.foodName} x${item.quantity} (₱${item.unitPrice}/each)'))
+                .toList(),
+
+            // Scan to Complete
+            const SizedBox(height: 8.0),
+            GestureDetector(
+              onTap: onScanTap,
+              child: const Text(
+                'Scan to Complete',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ],
