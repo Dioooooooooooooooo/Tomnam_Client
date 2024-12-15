@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tomnam/Exceptions/response_exception.dart';
 import 'package:tomnam/features/controllers/auth_controller.dart';
+import 'package:tomnam/utils/constants/routes.dart';
 
 class CustomerRegistrationPage extends StatefulWidget {
   const CustomerRegistrationPage({super.key});
@@ -50,6 +51,7 @@ class _CustomerRegistrationPageState extends State<CustomerRegistrationPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message)),
         );
+        Navigator.of(context).popAndPushNamed(loginRoute);
       } catch (e, stackTrace) {
         if (!context.mounted) return;
         String? message;

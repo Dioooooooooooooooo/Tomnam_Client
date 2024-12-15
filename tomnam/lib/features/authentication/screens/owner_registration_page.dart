@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
+import 'package:tomnam/features/controllers/auth_controller.dart';
+
+import '../../../utils/constants/routes.dart';
 
 class OwnerRegistrationPage extends StatefulWidget {
   const OwnerRegistrationPage({super.key});
@@ -9,13 +13,15 @@ class OwnerRegistrationPage extends StatefulWidget {
 }
 
 class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
+  final _authController = AuthController();
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final logger = Logger();
+  final _logger = Logger();
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -24,6 +30,51 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _handleSignUp() async {
+    if (_formKey.currentState!.validate()) {
+      final firstName = _firstNameController.text.trim();
+      final lastname = _lastNameController.text.trim();
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+      final confirmPassword = _confirmPasswordController.text.trim();
+
+      if (password != confirmPassword) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match')),
+        );
+        return;
+      }
+
+      try {
+        final message = await _authController.register({
+          'FirstName': firstName,
+          'LastName': lastname,
+          'Email': email,
+          'Password': password,
+          'ConfirmPassword': confirmPassword,
+          'UserRole': 'Owner',
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+        Navigator.of(context).popAndPushNamed(karenderyaRegisterRoute);
+      } catch (e, stackTrace) {
+        if (!context.mounted) return;
+        String? message;
+        if (e is ResponseException) {
+          message = e.error;
+        } else {
+          message = 'An error occurred during registration';
+        }
+        _logger.d(stackTrace);
+        _logger.e('An error occurred during registration: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    }
   }
 
   @override
@@ -152,12 +203,5 @@ class _OwnerRegistrationPageState extends State<OwnerRegistrationPage> {
         return null;
       },
     );
-  }
-
-  void _handleSignUp() {
-    if (_formKey.currentState!.validate()) {
-      // Implement sign up logic here
-      logger.i('Sign up pressed');
-    }
   }
 }

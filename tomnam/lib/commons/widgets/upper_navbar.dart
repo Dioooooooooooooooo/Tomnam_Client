@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class UpperNavBar extends StatelessWidget {
-  const UpperNavBar({super.key});
+  final bool isOwner;
+  static final _logger = Logger(
+    printer: PrettyPrinter(),
+  );
+
+  const UpperNavBar(this.isOwner, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartItemProvider =
+        Provider.of<CartItemProvider>(context, listen: false);
+
     return AppBar(
       backgroundColor: AppColors.mainGreenColor,
       title: Row(
@@ -30,12 +42,38 @@ class UpperNavBar extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
+          Center(
+            child: badges.Badge(
+              badgeContent: Text(
+                cartItemProvider.cartItems.length.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+              badgeStyle: const badges.BadgeStyle(
+                badgeColor: AppColors.accentRedOrangeColor,
+              ),
+              badgeAnimation: const badges.BadgeAnimation.slide(
+                animationDuration: Duration(milliseconds: 300),
+              ),
+              position: badges.BadgePosition.topEnd(top: -5, end: -5),
+              child: !isOwner
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, addToCartRoute),
+                    )
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.qr_code_scanner_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        _logger.d("qr code pressed");
+                      },
+                    ),
             ),
-            onPressed: () => Navigator.pushNamed(context, addToCartRoute),
           ),
         ],
       ),
