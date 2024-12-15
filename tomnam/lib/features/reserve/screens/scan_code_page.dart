@@ -2,10 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:tomnam/commons/widgets/headline_text.dart';
 import 'package:tomnam/commons/widgets/title_text.dart';
-import 'package:tomnam/utils/constants/routes.dart';
 import 'package:logger/logger.dart';
+import '../../.././commons/widgets/upper_navbar.dart';
 
 class ScanCodePage extends StatefulWidget {
   const ScanCodePage({super.key});
@@ -21,20 +20,7 @@ class _ScanCodePageState extends State<ScanCodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const HeadlineText(
-          text: "Scan QR code",
-          size: HeadlineSize.medium,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.popAndPushNamed(context, generateQrCodePageRoute);
-            },
-            icon: const Icon(Icons.qr_code_scanner_outlined),
-          ),
-        ],
-      ),
+      appBar: const UpperNavBar(true),
       body: MobileScanner(
         controller: MobileScannerController(
           detectionSpeed: DetectionSpeed.noDuplicates,
