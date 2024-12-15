@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 import '../../../utils/constants/routes.dart';
+import '../../../models/reservation.dart';
 
 class AnnouncementSection extends StatelessWidget {
-  const AnnouncementSection({super.key});
+  final List<Reservation> reservationsToday;
+
+  const AnnouncementSection({super.key, required this.reservationsToday});
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       width: double.infinity,
       height: 400,
@@ -20,29 +24,34 @@ class AnnouncementSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: RichText(
-              text: const TextSpan(
-                style: TextStyle(
+              text: TextSpan(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                 ),
                 children: [
-                  TextSpan(text: "You have "),
+                  const TextSpan(text: "You have "),
                   TextSpan(
-                    text: "2 orders",
-                    style: TextStyle(
+                    text: "${reservationsToday.length} orders",
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
-                  TextSpan(text: " reserved today."),
+                  const TextSpan(text: " reserved today."),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 35),
-          _buildOrderButton("Karenderya ni Danny", "12:00pm", context),
-          const SizedBox(height: 12),
-          _buildOrderButton("Boarding House ni James", "3:00pm", context),
+          // Dynamically render buttons based on reservations
+          for (var reservation in reservationsToday)
+            _buildOrderButton(
+              reservation.karenderya
+                  .name, // Assuming 'karenderya.name' is the store name
+              "${reservation.reserveDateTime.hour}:${reservation.reserveDateTime.minute.toString().padLeft(2, '0')}pm",
+              context,
+            ),
         ],
       ),
     );
@@ -57,8 +66,7 @@ class AnnouncementSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 26),
-        margin:
-            const EdgeInsets.only(left: 20, right: 20), // Margin for spacing
+        margin: const EdgeInsets.only(left: 20, right: 20),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(5),

@@ -18,7 +18,6 @@ import 'package:tomnam/features/home/screens/store_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
 import 'package:tomnam/features/reserve/screens/scan_code_page.dart';
 import 'package:tomnam/features/reserve/screens/generate_code_page.dart';
-import 'package:tomnam/models/cart_item.dart';
 import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/karenderya_registration_page.dart';
