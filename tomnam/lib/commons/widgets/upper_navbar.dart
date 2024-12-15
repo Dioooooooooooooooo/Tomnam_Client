@@ -6,7 +6,7 @@ import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
-class UpperNavBar extends StatelessWidget {
+class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isOwner;
   static final _logger = Logger(
     printer: PrettyPrinter(),
@@ -79,4 +79,7 @@ class UpperNavBar extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

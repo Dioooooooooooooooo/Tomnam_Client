@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
         addToCartRoute: (context) => const CartPage(),
         searchPageRoute: (context) => const SearchPage(),
         mainPageRoute: (context) => const MainPage(),
-        generateQrCodePageRoute: (context) => const GenerateCodePage(),
+        generateQrCodePageRoute: (context) =>
+            const GenerateCodePage(reservationId: null),
         scanQrCodePageRoute: (context) => const ScanCodePage(),
         checkoutPageRoute: (contex) => const CheckoutPage(),
         behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),

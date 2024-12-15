@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../../models/reservation.dart';
 
 class CalendarWidget extends StatefulWidget {
   final DateTime selectedDay;
-  final Function(DateTime day, DateTime focusedDay) onDaySelected;
-  final Map<DateTime, List<dynamic>> events; // Add events data as a parameter
+  final Function(DateTime, DateTime) onDaySelected;
+  final Map<DateTime, List<Reservation>> events;
 
   const CalendarWidget({
     super.key,
     required this.selectedDay,
     required this.onDaySelected,
-    required this.events, // Initialize events
+    this.events = const {},
   });
 
   @override
