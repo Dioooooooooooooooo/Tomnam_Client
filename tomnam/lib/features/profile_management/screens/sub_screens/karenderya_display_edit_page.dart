@@ -180,7 +180,7 @@ class _KarenderyaDisplayEditPageState extends State<KarenderyaDisplayEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: const UpperNavBar(),
+        flexibleSpace: const UpperNavBar(true),
       ),
       body: SafeArea(
         child: _isLoading

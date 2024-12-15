@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:tomnam/commons/widgets/reservation_details.dart';
 import 'package:tomnam/commons/widgets/upper_navbar.dart';
 import 'package:tomnam/data/services/api_service.dart';
 import 'package:tomnam/features/controllers/cart_item_controller.dart';
 import 'package:tomnam/models/food.dart';
+import 'package:tomnam/provider/cart_item_provider.dart';
+import 'package:tomnam/utils/constants/routes.dart';
 
 class ReserveFoodPage extends StatefulWidget {
   const ReserveFoodPage({super.key});
@@ -18,8 +21,6 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
     printer: PrettyPrinter(),
   );
 
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 12, minute: 0);
-  DateTime _selectedDate = DateTime.now();
   int _quantity = 1; // Initial quantity
   late Food food;
 
@@ -33,32 +34,6 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
       food = arguments['food'] as Food;
     } else {
       _logger.e('No store data found in arguments');
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
     }
   }
 
@@ -80,7 +55,7 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: const UpperNavBar(),
+        flexibleSpace: const UpperNavBar(false),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -152,8 +127,6 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
                       quantity: _quantity,
                       incrementQuantity: _incrementQuantity,
                       decrementQuantity: _decrementQuantity,
-                      time: _selectedTime.format(context),
-                      date: _selectedDate.toLocal().toString().split(' ')[0],
                     ),
                     const SizedBox(height: 20),
                     // Buttons (Add to Cart and Reserve)
@@ -169,6 +142,8 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
   }
 
   Widget _buildActionButtons() {
+    final CartItemProvider _cartItemProvider =
+        Provider.of<CartItemProvider>(context, listen: false);
     return Row(
       children: [
         Expanded(
@@ -180,11 +155,8 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
             ),
             child: TextButton(
               onPressed: () {
-
-                CartItemController.create({
-                  'foodId': food.Id,
-                  'quantity': _quantity
-                }).then((data) {
+                CartItemController.create(
+                    {'foodId': food.Id, 'quantity': _quantity}).then((data) {
                   _logger.i('Added to cart');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Added to cart')),
@@ -207,7 +179,16 @@ class _ReserveFoodPageState extends State<ReserveFoodPage> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                final item = await CartItemController.create(
+                    {'foodId': food.Id, 'quantity': _quantity});
+                _logger.d('done');
+                if (item != null) {
+                  Navigator.pushNamed(context, checkoutPageRoute, arguments: {
+                    'selectedItems': [item]
+                  });
+                }
+              },
               child: const Text(
                 'Reserve',
                 style: TextStyle(color: Colors.white, fontSize: 16),

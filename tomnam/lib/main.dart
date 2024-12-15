@@ -6,7 +6,7 @@ import 'package:tomnam/features/authentication/screens/owner_registration_page.d
 import 'package:tomnam/features/authentication/screens/proof_of_business_page.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
-import 'package:tomnam/features/reserve/screens/add_to_cart_page.dart';
+import 'package:tomnam/features/reserve/screens/cart_page.dart';
 import 'package:tomnam/features/reserve/screens/checkout_page.dart';
 import 'package:tomnam/features/reserve/screens/reserve_food_page.dart';
 import 'package:tomnam/features/profile_management/screens/sub_screens/profile_food_page.dart';
@@ -16,6 +16,7 @@ import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
+import 'package:tomnam/models/cart_item.dart';
 import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/theme/theme.dart';
 import 'features/authentication/screens/karenderya_registration_page.dart';
@@ -60,14 +61,10 @@ class MyApp extends StatelessWidget {
         reserveFoodRoute: (context) => const ReserveFoodPage(),
         calendarRoute: (context) => const CalendarPage(),
         profilePageRoute: (context) => const ProfilePage(),
-        addToCartRoute: (context) => const AddToCartPage(),
+        addToCartRoute: (context) => const CartPage(),
         searchPageRoute: (context) => const SearchPage(),
         mainPageRoute: (context) => const MainPage(),
-        checkoutPageRoute: (context) {
-          final selectedItems = ModalRoute.of(context)?.settings.arguments
-              as List<Map<String, dynamic>>;
-          return CheckoutPage(selectedItems: selectedItems);
-        },
+        checkoutPageRoute: (contex) => const CheckoutPage(),
         behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),
         editKarenderyaDisplayRoute: (context) =>
             const KarenderyaDisplayEditPage(),

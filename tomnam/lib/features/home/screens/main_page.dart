@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/controllers/cart_item_controller.dart';
 import 'package:tomnam/features/controllers/karenderyas_controller.dart';
+import 'package:tomnam/features/controllers/profile_controller.dart';
 import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
 import 'package:tomnam/commons/widgets/bottom_navbar.dart';
@@ -28,16 +29,33 @@ class _MainScreenState extends State<MainPage> {
     const HomePage(),
     const ProfilePage(),
   ];
+
+  bool? isOwner;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchKarenderyas(); // Fetch data on widget initialization
+    _fetchUser(); // Fetch data on widget initialization
+  }
+
+  Future<void> _fetchUser() async {
+    try {
+      final user = await ProfileController.getUser();
+      isOwner = (user.role == 'Owner');
+
+      _logger.d(user.firstName);
+      _logger.d(user.role);
+      _logger.d(isOwner);
+      _fetchKarenderyas();
+    } catch (e) {
+      _logger.e('Error fetching user: $e');
+    }
   }
 
   Future<void> _fetchKarenderyas() async {
     try {
+      _logger.d('Fetching karenderyas');
       final stores = await KarenderyasController.read(
         null, // karenderyaId
         null, // name
@@ -46,11 +64,17 @@ class _MainScreenState extends State<MainPage> {
         null, // locationCity
         null, // locationProvince
       );
-      final storeProvider = Provider.of<KarenderyaProvider>(context, listen: false);
+
+      final storeProvider =
+          Provider.of<KarenderyaProvider>(context, listen: false);
       storeProvider.setStores(stores);
-      final cartItems = await CartItemController.read();
-      final cartItemProvider = Provider.of<CartItemProvider>(context, listen: false);
-      cartItemProvider.setCartItems(cartItems);
+
+      if (!isOwner!) {
+        final cartItems = await CartItemController.read();
+        final cartItemProvider =
+            Provider.of<CartItemProvider>(context, listen: false);
+        cartItemProvider.setCartItems(cartItems);
+      }
     } catch (e) {
       _logger.e('Error fetching Karenderyas: $e');
     } finally {
@@ -68,18 +92,17 @@ class _MainScreenState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    isLoading ? const Center(child: CircularProgressIndicator()) :
-    Scaffold(
-      appBar: AppBar(
-        flexibleSpace: const UpperNavBar(),
-      ),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavTap,
-      ),
-    );
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Scaffold(
+            appBar: AppBar(
+              flexibleSpace: UpperNavBar(isOwner!),
+            ),
+            body: _pages[_currentIndex],
+            bottomNavigationBar: BottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: _onNavTap,
+            ),
+          );
   }
 }
-

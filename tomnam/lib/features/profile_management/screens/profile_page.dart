@@ -52,6 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchKarenderya() async {
     try {
+      _logger.d('Karenderya: ${_user!.karenderyaId}');
       final karenderya = await KarenderyasController.read(
           _user!.karenderyaId,
           null, // karenderyaName

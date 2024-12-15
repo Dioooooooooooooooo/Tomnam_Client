@@ -7,16 +7,19 @@ import '../../../utils/constants/routes.dart';
 class FoodItem extends StatelessWidget {
   final Food food;
   final bool isVertical;
+  final bool isOwner;
 
-  const FoodItem(this.food, this.isVertical, {super.key});
+  const FoodItem(this.food, this.isVertical, this.isOwner, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, reserveFoodRoute, arguments: {
-            'food': food,
-          });
+          if (!isOwner) {
+            Navigator.pushNamed(context, reserveFoodRoute, arguments: {
+              'food': food,
+            });
+          }
         },
         child: isVertical
             ? Container(

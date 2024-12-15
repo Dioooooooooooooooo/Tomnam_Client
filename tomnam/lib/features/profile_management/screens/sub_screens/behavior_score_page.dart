@@ -38,7 +38,7 @@ class _BehaviorScorePageState extends State<BehaviorScorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: const UpperNavBar(),
+        flexibleSpace: UpperNavBar(_user.role == 'Owner'),
       ),
       body: SafeArea(
         child: ListView(

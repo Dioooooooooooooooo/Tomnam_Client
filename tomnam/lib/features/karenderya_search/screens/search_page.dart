@@ -5,6 +5,7 @@ import 'package:tomnam/commons/widgets/headline_text.dart';
 import 'package:tomnam/commons/widgets/store_list_vertical.dart';
 import 'package:tomnam/commons/widgets/food_list.dart';
 import 'package:tomnam/features/controllers/foods_controller.dart';
+import 'package:tomnam/features/controllers/profile_controller.dart';
 import 'package:tomnam/models/food.dart';
 import 'package:tomnam/models/karenderya.dart';
 import 'package:tomnam/features/controllers/karenderyas_controller.dart';
@@ -53,7 +54,16 @@ class _SearchPageState extends State<SearchPage> {
   String query = "";
   bool isFoodSelected = false;
   bool isStoreSelected = false;
+  bool? isOwner;
   final logger = Logger();
+
+  @override
+  void initState() async {
+    super.initState();
+
+    final user = await ProfileController.getUser();
+    isOwner = (user.role == "Owner");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +170,9 @@ class _SearchPageState extends State<SearchPage> {
                             if (isFoodSelected) ...[
                               FutureBuilder<List<Food>>(
                                 future: FoodsController.read(
-                                  null, // foodId
-                                  query, // foodName
-                                  null
-                                ), // Call your async function
+                                    null, // foodId
+                                    query, // foodName
+                                    null), // Call your async function
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -179,7 +188,7 @@ class _SearchPageState extends State<SearchPage> {
                                       snapshot.data!.isNotEmpty) {
                                     // Render the fetched stores
                                     return FoodList(
-                                        snapshot.data ?? [], true);
+                                        snapshot.data ?? [], true, isOwner!);
                                   } else {
                                     // Handle empty results
                                     return const Center(
@@ -187,7 +196,6 @@ class _SearchPageState extends State<SearchPage> {
                                   }
                                 },
                               ),
-
                             ],
 
                             // Show store results based on query if the 'Store' button is selected

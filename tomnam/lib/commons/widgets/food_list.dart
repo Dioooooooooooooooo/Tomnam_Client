@@ -7,8 +7,9 @@ import 'food_item.dart';
 class FoodList extends StatelessWidget {
   final bool isVertical;
   final List<Food> foods;
+  final bool isOwner;
 
-  const FoodList(this.foods, this.isVertical, {super.key});
+  const FoodList(this.foods, this.isVertical, this.isOwner, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class FoodList extends StatelessWidget {
               return FoodItem(
                 foods[index],
                 true,
+                isOwner
               );
             },
           )
@@ -36,6 +38,7 @@ class FoodList extends StatelessWidget {
                   child: FoodItem(
                     foods[index],
                     true,
+                    isOwner
                   ),
                 );
               }),

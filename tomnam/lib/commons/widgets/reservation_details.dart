@@ -4,16 +4,16 @@ class ReservationDetailsContainer extends StatelessWidget {
   final int quantity;
   final VoidCallback incrementQuantity;
   final VoidCallback decrementQuantity;
-  final String time;
-  final String date;
+  // final String time;
+  // final String date;
 
   const ReservationDetailsContainer({
     Key? key,
     required this.quantity,
     required this.incrementQuantity,
     required this.decrementQuantity,
-    required this.time,
-    required this.date,
+    // required this.time,
+    // required this.date,
   }) : super(key: key);
 
   @override
@@ -44,8 +44,8 @@ class ReservationDetailsContainer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildTimeDateSection(time, date),
-          const SizedBox(height: 16),
+          // _buildTimeDateSection(time, date),
+          // const SizedBox(height: 16),
           // Quantity selection
           Center(
             child: Row(
