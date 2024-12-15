@@ -16,6 +16,8 @@ import 'package:tomnam/features/home/screens/home_page.dart';
 import 'package:tomnam/features/home/screens/main_page.dart';
 import 'package:tomnam/features/home/screens/store_page.dart';
 import 'package:tomnam/features/profile_management/screens/profile_page.dart';
+import 'package:tomnam/features/reserve/screens/scan_code_page.dart';
+import 'package:tomnam/features/reserve/screens/generate_code_page.dart';
 import 'package:tomnam/models/cart_item.dart';
 import 'package:tomnam/provider/cart_item_provider.dart';
 import 'package:tomnam/utils/theme/theme.dart';
@@ -64,6 +66,8 @@ class MyApp extends StatelessWidget {
         addToCartRoute: (context) => const CartPage(),
         searchPageRoute: (context) => const SearchPage(),
         mainPageRoute: (context) => const MainPage(),
+        generateQrCodePageRoute: (context) => const GenerateCodePage(),
+        scanQrCodePageRoute: (context) => const ScanCodePage(),
         checkoutPageRoute: (contex) => const CheckoutPage(),
         behaviorScoreClickedRoute: (context) => const BehaviorScorePage(),
         editKarenderyaDisplayRoute: (context) =>
