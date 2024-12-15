@@ -290,8 +290,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildTimeDateInput('Time', time),
-        _buildTimeDateInput('Date', date),
+        GestureDetector(
+          onTap: () {
+            _selectTime(context);
+          },
+          child: _buildTimeDateInput('Time', time),
+        ),
+        GestureDetector(
+          onTap: () {
+            _selectDate(context);
+          },
+          child: _buildTimeDateInput('Date', date),
+        ),
       ],
     );
   }
