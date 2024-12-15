@@ -5,18 +5,19 @@ import 'package:logger/logger.dart';
 class ReservationController {
   static final _logger = Logger();
 
-  static Future<CartItem> create(Map<String, dynamic> data) async {
+  static Future<String> create(Map<String, dynamic> data) async {
     String url = "/reservation";
 
     try {
       final response = await ApiService.postData(url, data);
 
       final responseData = response['data'] as Map<String, dynamic>;
-      return CartItem.fromJson(responseData);
+      _logger.d('responseDate $responseData');
+      return response['message'];
     } catch (e, stackTrace) {
-      _logger.e("Error creating CartItem: $e");
+      _logger.e("Error creating reservation: $e");
       _logger.e(stackTrace);
-      throw Exception("Failed to create CartItem");
+      throw Exception("Failed to create reservation");
     }
   }
 }

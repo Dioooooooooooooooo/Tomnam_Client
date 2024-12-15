@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tomnam/Exceptions/response_exception.dart';
 import 'package:tomnam/data/services/api_service.dart';
+import 'package:tomnam/features/controllers/reservation_controller.dart';
 import 'package:tomnam/models/cart_item.dart';
+import 'package:tomnam/utils/constants/routes.dart';
 import 'package:tomnam/utils/constants/tomnam_pallete.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -17,8 +20,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String time = TimeOfDay.fromDateTime(DateTime.now()).toString();
   String date = DateTime.now().toString();
 
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 12, minute: 0);
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now().toUtc().add(const Duration(hours: 8));
+  late TimeOfDay _selectedTime = TimeOfDay.fromDateTime(_selectedDate);
 
   final _logger = Logger(
     printer: PrettyPrinter(),
@@ -47,11 +50,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     if (arguments != null && arguments is Map<String, dynamic>) {
       selectedItems = arguments['selectedItems'] as List<CartItem>;
-      _logger.d('Received store data: $selectedItems');
+      _logger.d('Received selected items: $selectedItems');
 
       _isLoading = false;
     } else {
-      _logger.e('No karenderya data found in arguments');
+      _logger.e('No cart items found in arguments');
     }
   }
 
@@ -81,6 +84,55 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
+  Future<void> _confirmReservation() async {
+    List<String> cartItemIds = [];
+
+    for (var item in selectedItems) {
+      cartItemIds.add(item.Id);
+    }
+
+    _logger.d('cart ids: $cartItemIds');
+
+    // Combine selected time and date
+    DateTime combinedDateTime = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    ).toUtc();
+
+    final reservationData = <String, dynamic>{};
+
+    _logger.d(combinedDateTime.toString());
+    reservationData['CartItemIds'] = cartItemIds;
+    reservationData['ReserveDateTime'] = combinedDateTime.toIso8601String();
+    reservationData['ModeOfPayment'] = 'COD';
+
+    try {
+      final message = await ReservationController.create(reservationData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(mainPageRoute, (route) => false);
+    } catch (e, stackTrace) {
+      if (!context.mounted) return;
+      String? message;
+      if (e is ResponseException) {
+        message = e.error;
+      } else {
+        message = 'An error occurred during reservation';
+      }
+      _logger.d(stackTrace);
+      _logger.e('An error occurred during reservation: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final groupedItems = <String, List<CartItem>>{};
@@ -90,91 +142,101 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Checkout")),
-      body: _isLoading
-          ? null
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: false,
-                    itemCount: groupedItems.length,
-                    itemBuilder: (context, storeIndex) {
-                      final storeName = groupedItems.keys.elementAt(storeIndex);
-                      final storeItems = groupedItems[storeName]!;
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(
+                child:
+                    CircularProgressIndicator()) // Show loader while fetching
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: groupedItems.length,
+                        itemBuilder: (context, storeIndex) {
+                          final storeName =
+                              groupedItems.keys.elementAt(storeIndex);
+                          final storeItems = groupedItems[storeName]!;
 
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 5)
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(storeName,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            ...storeItems.map(
-                              (item) => Card(
-                                margin: const EdgeInsets.all(8.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Image with padding between image and text
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        '${ApiService.baseURL}/${item.food.foodPhoto}'),
-                                                    fit: BoxFit.cover)),
-                                          )),
-                                      // Column with foodName and price
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(item.food.foodName,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text("Php ${item.food.unitPrice}"),
-                                          ],
-                                        ),
-                                      ),
-                                      // Quantity display at the right
-                                      Text("x${item.quantity}",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                          return _buildReservedItems(storeName, storeItems);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      _buildTimeDateSection(_selectedTime.format(context),
+                          _selectedDate.toLocal().toString().split(' ')[0]),
+                      const SizedBox(height: 10)
+                    ],
                   ),
                 ),
-                _buildTimeDateSection(time, date),
-                _buildFooter()
-              ],
+              ),
+      ),
+      bottomNavigationBar: _buildFooter(),
+    );
+  }
+
+  // This is to build the reserved items section of the page
+  Widget _buildReservedItems(String storeName, storeItems) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 5)
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(storeName,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ...storeItems.map(
+            (item) => Card(
+              margin: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image with padding between image and text
+                    Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      '${ApiService.baseURL}/${item.food.foodPhoto}'),
+                                  fit: BoxFit.cover)),
+                        )),
+                    // Column with foodName and price
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(item.food.foodName,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          Text("Php ${item.food.unitPrice}"),
+                        ],
+                      ),
+                    ),
+                    // Quantity display at the right
+                    Text("x${item.quantity}",
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -189,7 +251,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           // bottom navbar for cart
           _buildFooterItem('Php $totalPrice', textColor: Colors.red),
           _buildFooterItem('Confirm',
-              isButton: true, onTap: () {}, textColor: Colors.white),
+              isButton: true,
+              onTap: _confirmReservation,
+              textColor: Colors.white),
         ],
       ),
     );
@@ -224,7 +288,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Widget _buildTimeDateSection(String time, String date) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildTimeDateInput('Time', time),
         _buildTimeDateInput('Date', date),
