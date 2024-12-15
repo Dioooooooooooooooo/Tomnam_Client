@@ -31,27 +31,27 @@ class StoreCartItem extends StatelessWidget {
               ),
               Image.network(
                 '${ApiService.baseURL}/${cartItem.food.foodPhoto}',
-                height: 140,
-                width: 150,
+                height: 75,
+                width: 75,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   // Incase the image fails to load or null or whatever, show a placeholder image
                   return Image.asset(
                     'assets/images/cover-photo.png',
-                    height: 140,
-                    width: 150,
+                    height: 75,
+                    width: 75,
                     fit: BoxFit.cover,
                   );
                 },
               ),
-
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(cartItem.food.foodName, style: const TextStyle(fontSize: 16)),
+                      Text(cartItem.food.foodName,
+                          style: const TextStyle(fontSize: 16)),
                       Text("Php ${cartItem.food.unitPrice}.00",
                           style: const TextStyle(fontSize: 14)),
                     ],
@@ -60,10 +60,12 @@ class StoreCartItem extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.remove),
-                onPressed:
-                    cartItem.quantity > 1 ? () => onQuantityChanged(cartItem.quantity - 1) : null,
+                onPressed: cartItem.quantity > 1
+                    ? () => onQuantityChanged(cartItem.quantity - 1)
+                    : null,
               ),
-              Text(cartItem.quantity.toString(), style: const TextStyle(fontSize: 16)),
+              Text(cartItem.quantity.toString(),
+                  style: const TextStyle(fontSize: 16)),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () => onQuantityChanged(cartItem.quantity + 1),
