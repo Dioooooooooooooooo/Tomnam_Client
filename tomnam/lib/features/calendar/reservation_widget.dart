@@ -44,7 +44,7 @@ class ReservationWidget extends StatelessWidget {
 
             // Reserved Items
             const SizedBox(height: 8.0),
-            Text('Items:'),
+            const Text('Items:'),
             ...reservation.reservedItems
                 .map((item) => Text(
                     '• ${item.foodName} x${item.quantity} (₱${item.unitPrice}/each)'))

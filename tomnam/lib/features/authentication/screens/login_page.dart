@@ -77,24 +77,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // Top section with background image
-            Container(
-              height: 300,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background for tomnam.jpg'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Color.fromARGB(190, 70, 106, 96),
-                    BlendMode.multiply,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Top section with background image
+              Container(
+                height: MediaQuery.of(context).size.height * 0.4,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/background for tomnam.jpg'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Color.fromARGB(190, 70, 106, 96),
+                      BlendMode.multiply,
+                    ),
                   ),
                 ),
-              ),
-              child: const SafeArea(
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(24.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -121,11 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-            ),
 
-            // Bottom section with white background
-            Expanded(
-              child: Container(
+              // Bottom section with white background
+              Container(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -192,21 +191,21 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          // Handle forgot password
-                        },
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       // Handle forgot password
+                    //     },
+                    //     child: const Text(
+                    //       'Forgot password?',
+                    //       style: TextStyle(
+                    //         color: Colors.redAccent,
+                    //         fontSize: 14,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _handleLogin,
@@ -250,8 +249,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
