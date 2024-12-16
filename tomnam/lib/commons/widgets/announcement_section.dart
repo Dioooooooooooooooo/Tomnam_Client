@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import '../../../utils/constants/tomnam_pallete.dart';
 import '../../../utils/constants/routes.dart';
 import '../../../models/reservation.dart';
+import 'package:intl/intl.dart';
 
 class AnnouncementSection extends StatelessWidget {
   final List<Reservation> reservationsToday;
+  final VoidCallback onNavigateToCalendar;
 
-  const AnnouncementSection({super.key, required this.reservationsToday});
+  const AnnouncementSection({
+    super.key,
+    required this.reservationsToday,
+    required this.onNavigateToCalendar,
+  });
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       width: double.infinity,
       height: 400,
@@ -22,7 +28,7 @@ class AnnouncementSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
             child: RichText(
               text: TextSpan(
                 style: const TextStyle(
@@ -43,30 +49,39 @@ class AnnouncementSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 35),
-          // Dynamically render buttons based on reservations
-          for (var reservation in reservationsToday)
-            _buildOrderButton(
-              reservation.karenderya
-                  .name, // Assuming 'karenderya.name' is the store name
-              "${reservation.reserveDateTime.hour}:${reservation.reserveDateTime.minute.toString().padLeft(2, '0')}pm",
-              context,
+          Flexible(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return ListView.builder(
+                  shrinkWrap:
+                      true, // Makes the ListView take up only the necessary height
+                  itemCount: reservationsToday.length,
+                  itemBuilder: (context, index) {
+                    return _buildOrderButton(
+                      reservationsToday[index].karenderya.name,
+                      DateFormat("hh:mm a")
+                          .format(reservationsToday[index].reserveDateTime),
+                      context,
+                    );
+                  },
+                );
+              },
             ),
+          ),
+          const SizedBox(height: 35),
         ],
       ),
     );
   }
 
   Widget _buildOrderButton(
-      String orderDetails, String time, BuildContext context) {
+      String karenderyaName, String time, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, calendarRoute);
-      },
+      onTap: onNavigateToCalendar,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 26),
-        margin: const EdgeInsets.only(left: 20, right: 20),
+        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(5),
@@ -76,7 +91,7 @@ class AnnouncementSection extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                orderDetails,
+                karenderyaName,
                 style: const TextStyle(
                   color: AppColors.mainGreenColor,
                   fontSize: 14,

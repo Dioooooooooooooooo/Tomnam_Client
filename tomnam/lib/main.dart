@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         karenderyaRegisterRoute: (context) =>
             const KarenderyaRegistrationPage(),
         proofOfBusinessRoute: (context) => const ProofOfBusinessPage(),
-        homeRoute: (context) => const HomePage(),
+        homeRoute: (context) => const MainPage(),
         storeRoute: (context) => const StorePage(),
         reserveFoodRoute: (context) => const ReserveFoodPage(),
         calendarRoute: (context) => const CalendarPage(),

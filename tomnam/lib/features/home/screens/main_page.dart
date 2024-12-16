@@ -24,14 +24,20 @@ class _MainScreenState extends State<MainPage> {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  final List<Widget> _pages = [
-    const CalendarPage(),
-    const HomePage(),
-    const ProfilePage(),
-  ];
+  // final List<Widget> _pages = [
+  //   const CalendarPage(),
+  //   HomePage(onNavigateToCalendar: navigateToCalendarTab),
+  //   const ProfilePage(),
+  // ];
 
   bool? isOwner;
   bool isLoading = true;
+
+  void navigateToCalendarTab() {
+    setState(() {
+      _currentIndex = 0; // CalendarPage index
+    });
+  }
 
   @override
   void initState() {
@@ -98,7 +104,14 @@ class _MainScreenState extends State<MainPage> {
             appBar: AppBar(
               flexibleSpace: UpperNavBar(isOwner!),
             ),
-            body: _pages[_currentIndex],
+            body: IndexedStack(
+              index: _currentIndex,
+              children: [
+                const CalendarPage(),
+                HomePage(onNavigateToCalendar: navigateToCalendarTab),
+                const ProfilePage(),
+              ],
+            ),
             bottomNavigationBar: BottomNavBar(
               currentIndex: _currentIndex,
               onTap: _onNavTap,
