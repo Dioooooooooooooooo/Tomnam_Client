@@ -7,9 +7,7 @@ import '../../../utils/constants/routes.dart';
 class StoreItem extends StatelessWidget {
   final Karenderya store;
 
-  const StoreItem(
-    this.store, {super.key}
-  );
+  const StoreItem(this.store, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,28 +49,33 @@ class StoreItem extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  store.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Icon(Icons.star,
-                        color: AppColors.mainOrangeColor, size: 18),
-                    Text(
-                      "${store.rating}", // Show the reviews
-                      style: const TextStyle(color: AppColors.blackColor),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    store.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ],
+                    maxLines: 3, // Limits the text to two lines
+                    overflow:
+                        TextOverflow.ellipsis, // Adds "..." if text is too long
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      const Icon(Icons.star,
+                          color: AppColors.mainOrangeColor, size: 18),
+                      Text(
+                        "${store.rating}", // Show the reviews
+                        style: const TextStyle(color: AppColors.blackColor),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
