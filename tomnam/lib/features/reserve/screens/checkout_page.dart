@@ -100,7 +100,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _selectedDate.day,
       _selectedTime.hour,
       _selectedTime.minute,
-    ).toUtc();
+    ).toUtc().add(const Duration(hours: 8));
 
     final reservationData = <String, dynamic>{};
 
