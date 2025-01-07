@@ -1,4 +1,5 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cmake.sourceDirectory": "E:/3rd year 1st sem/CSIT 321 Applications Development and Emerging Technologies/Tomnam_Client/tomnam/linux"
 }
