@@ -32,7 +32,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
       return reservations;
     } catch (e) {
-      // Handle error
       print('Error fetching reservations: $e');
       return [];
     }
