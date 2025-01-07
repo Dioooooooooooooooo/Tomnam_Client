@@ -8,8 +8,7 @@ class ApiService {
   static final _logger = Logger(
     printer: PrettyPrinter(),
   );
-  static const String baseUrl = 'http://192.168.1.14:5144/api';
-  static const String baseURL = 'http://192.168.1.14:5144';
+  static const String baseURL = 'https://complete-tick-cleanly.ngrok-free.app';
   static const String apiURL = '$baseURL/api';
 
   // GET request example with token

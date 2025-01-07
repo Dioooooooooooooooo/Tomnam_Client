@@ -52,16 +52,20 @@ class ReservationWidget extends StatelessWidget {
 
             // Scan to Complete
             const SizedBox(height: 8.0),
-            GestureDetector(
-              onTap: onScanTap,
-              child: const Text(
-                'Scan to Complete',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
+            SizedBox(
+              child: reservation.status == 'Pending'
+                  ? GestureDetector(
+                      onTap: onScanTap,
+                      child: const Text(
+                        'Scan to Complete',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    )
+                  : const Text('☆☆☆☆☆'),
+            )
           ],
         ),
       ),

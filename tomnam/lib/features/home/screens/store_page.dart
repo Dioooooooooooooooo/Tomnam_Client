@@ -195,15 +195,20 @@ class _StorePageState extends State<StorePage> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            Text(
-                              '${_store.locationStreet}, ${_store.locationBarangay}, ${_store.locationCity}, ${_store.locationProvince}',
-                              style: const TextStyle(
-                                color: Color(0xFF9796A1),
-                                fontSize: 12,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w400,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
+                              child: Text(
+                                '${_store.locationStreet}, ${_store.locationBarangay}, ${_store.locationCity}, ${_store.locationProvince}',
+                                style: const TextStyle(
+                                  color: Color(0xFF9796A1),
+                                  fontSize: 12,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),

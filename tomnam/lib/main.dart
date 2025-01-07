@@ -8,6 +8,7 @@ import 'package:tomnam/features/calendar/screens/calendar_page.dart';
 import 'package:tomnam/features/karenderya_search/screens/search_page.dart';
 import 'package:tomnam/features/reserve/screens/cart_page.dart';
 import 'package:tomnam/features/reserve/screens/checkout_page.dart';
+import 'package:tomnam/features/reserve/screens/confirm_reservation_page.dart';
 import 'package:tomnam/features/reserve/screens/reserve_food_page.dart';
 import 'package:tomnam/features/profile_management/screens/sub_screens/profile_food_page.dart';
 import 'package:tomnam/features/profile_management/screens/sub_screens/behavior_score_page.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
             const KarenderyaDisplayEditPage(),
         addFoodRoute: (context) => const ProfileFoodPage(),
         editFoodRoute: (context) => const ProfileFoodPage(),
+        confirmReservationRoute: (context) => const ConfirmReservationPage(),
       },
     );
   }
